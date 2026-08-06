@@ -1,0 +1,15 @@
+<label class="toggle" [for]="inputId()">
+  <input
+    [id]="inputId()"
+    [name]="field().id.toString()"
+    type="checkbox"
+    role="switch"
+    [formControl]="control()"
+    [required]="field().required ?? false"
+    [attr.aria-labelledby]="labelId()"
+    [attr.aria-invalid]="showError() ? 'true' : null"
+    [attr.aria-describedby]="showError() ? errorId() : null"
+  />
+  <span class="toggle__track" aria-hidden="true"><span></span></span>
+  <span>{{ control().value ? 'Yes' : 'No' }}</span>
+</label>

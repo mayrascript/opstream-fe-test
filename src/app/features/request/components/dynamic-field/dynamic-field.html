@@ -1,0 +1,22 @@
+<app-field-shell
+  [field]="field()"
+  [control]="control()"
+  [showError]="shouldShowError()"
+  [saveState]="saveState()"
+  (retryRequested)="retryRequested.emit(field().id)"
+>
+  @switch (field().type) {
+    @case ('text') {
+      <app-text-field [field]="field()" [control]="control()" [showError]="shouldShowError()" />
+    }
+    @case ('number') {
+      <app-number-field [field]="field()" [control]="control()" [showError]="shouldShowError()" />
+    }
+    @case ('radio') {
+      <app-radio-field [field]="field()" [control]="control()" [showError]="shouldShowError()" />
+    }
+    @case ('toggle') {
+      <app-toggle-field [field]="field()" [control]="control()" [showError]="shouldShowError()" />
+    }
+  }
+</app-field-shell>

@@ -1,0 +1,27 @@
+@if (state(); as save) {
+  @if (save.status !== 'idle') {
+    <div
+      class="save-state"
+      [class.save-state--error]="save.status === 'error'"
+      [class.save-state--saved]="save.status === 'saved'"
+      aria-live="polite"
+    >
+      <span class="save-state__dot" aria-hidden="true"></span>
+      @switch (save.status) {
+        @case ('saving') {
+          <span>Saving…</span>
+        }
+        @case ('retrying') {
+          <span>Error — retrying…</span>
+        }
+        @case ('saved') {
+          <span>Saved</span>
+        }
+        @case ('error') {
+          <span>Not saved</span>
+          <button type="button" (click)="retryRequested.emit()">Retry</button>
+        }
+      }
+    </div>
+  }
+}

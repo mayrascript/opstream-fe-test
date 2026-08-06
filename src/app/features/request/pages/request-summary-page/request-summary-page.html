@@ -1,0 +1,33 @@
+@if (requestSession.summary(); as summary) {
+  @if (requestSession.schema(); as schema) {
+    <section class="summary-page">
+      <header class="summary-hero">
+        <span class="success-mark" aria-hidden="true">✓</span>
+        <p class="eyebrow">Request submitted</p>
+        <h1>Your request is ready.</h1>
+        <p>{{ schema.title }} · Reference {{ summary.requestId.slice(0, 8).toUpperCase() }}</p>
+      </header>
+
+      <div class="summary-card">
+        @for (section of schema.sections; track section.id) {
+          <section class="summary-section">
+            <h2>{{ section.title }}</h2>
+            <dl>
+              @for (field of section.fields; track field.id) {
+                <div>
+                  <dt>{{ field.label }}</dt>
+                  <dd>{{ displayValue(summary.answers[field.id.toString()]) }}</dd>
+                </div>
+              }
+            </dl>
+          </section>
+        }
+
+        <footer>
+          <p>Submitted {{ summary.createdAt.toLocaleString() }}</p>
+          <app-button (click)="createNew()">Create new request</app-button>
+        </footer>
+      </div>
+    </section>
+  }
+}

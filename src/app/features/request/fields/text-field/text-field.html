@@ -1,0 +1,12 @@
+<input
+  [id]="inputId()"
+  [name]="field().id.toString()"
+  type="text"
+  autocomplete="off"
+  enterkeyhint="next"
+  [formControl]="control()"
+  [required]="field().required ?? false"
+  [attr.aria-labelledby]="labelId()"
+  [attr.aria-invalid]="showError() ? 'true' : null"
+  [attr.aria-describedby]="showError() ? errorId() : null"
+/>

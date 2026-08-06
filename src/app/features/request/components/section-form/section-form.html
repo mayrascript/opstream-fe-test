@@ -1,0 +1,30 @@
+<form [formGroup]="group()" (ngSubmit)="handleSubmit()" novalidate>
+  <div class="section-heading">
+    <p class="eyebrow">Request details</p>
+    <h1>{{ section().title }}</h1>
+    <p>Complete the information below. Your answers save automatically.</p>
+  </div>
+
+  <div class="fields">
+    @for (field of section().fields; track field.id) {
+      <app-dynamic-field
+        [field]="field"
+        [control]="group().controls[field.id.toString()]"
+        [attempted]="attempted()"
+        [saveState]="saveStates().get(field.id)"
+        (retryRequested)="retryRequested.emit($event)"
+      />
+    }
+  </div>
+
+  <div class="form-actions">
+    @if (!isFirst()) {
+      <app-button variant="secondary" (click)="previousRequested.emit()">Previous</app-button>
+    } @else {
+      <span></span>
+    }
+    <app-button type="submit" [disabled]="submitting()">
+      {{ isLast() ? (submitting() ? 'Submitting…' : 'Submit request') : 'Next' }}
+    </app-button>
+  </div>
+</form>

@@ -1,0 +1,20 @@
+.form-error {
+  align-items: center;
+  color: var(--color-error);
+  display: flex;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  gap: 0.375rem;
+  margin: 0.5rem 0 0;
+}
+
+.form-error span {
+  align-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  block-size: 1rem;
+  display: inline-flex;
+  font-size: 0.6875rem;
+  justify-content: center;
+  inline-size: 1rem;
+}

@@ -1,0 +1,15 @@
+<div class="radio-options" [attr.aria-describedby]="showError() ? errorId() : null">
+  @for (option of field().options ?? []; track option) {
+    <label class="radio-option">
+      <input
+        type="radio"
+        [name]="field().id.toString()"
+        [value]="option"
+        [formControl]="control()"
+        [required]="field().required ?? false"
+        [attr.aria-invalid]="showError() ? 'true' : null"
+      />
+      <span>{{ option }}</span>
+    </label>
+  }
+</div>

@@ -1,0 +1,37 @@
+<section class="chooser-page">
+  <div class="chooser-intro">
+    <p class="eyebrow">Procurement workspace</p>
+    <h1>What are you requesting?</h1>
+    <p>Choose a request type to begin. We will guide you through the details and save as you go.</p>
+  </div>
+
+  @if (loading()) {
+    <div class="state-card" aria-live="polite">
+      <span class="loader" aria-hidden="true"></span>
+      Loading request types…
+    </div>
+  } @else if (error()) {
+    <div class="state-card state-card--error" role="alert">
+      <p>{{ error() }}</p>
+      <button type="button" (click)="loadSchemas()">Try again</button>
+    </div>
+  } @else {
+    <div class="schema-grid">
+      @for (schema of schemas(); track schema.id; let index = $index) {
+        <button class="schema-card" type="button" (click)="choose(schema)">
+          <span class="schema-card__icon" aria-hidden="true">{{ index === 0 ? 'S' : 'H' }}</span>
+          <span>
+            <strong>{{ schema.title }}</strong>
+            <small>{{ schema.sections.length }} guided steps</small>
+          </span>
+          <span class="schema-card__arrow" aria-hidden="true">→</span>
+        </button>
+      }
+    </div>
+  }
+
+  <aside class="trust-note">
+    <span aria-hidden="true">✓</span>
+    <p><strong>Automatic progress.</strong> Every answer is saved while you work.</p>
+  </aside>
+</section>

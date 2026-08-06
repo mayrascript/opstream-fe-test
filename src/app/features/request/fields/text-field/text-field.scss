@@ -1,0 +1,24 @@
+input {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--color-ink);
+  inline-size: 100%;
+  min-block-size: 3rem;
+  padding: 0.75rem 0.875rem;
+}
+
+input:hover {
+  border-color: var(--color-muted);
+}
+
+input:focus-visible {
+  border-color: var(--color-accent-strong);
+  box-shadow: var(--focus-ring);
+  outline: 0;
+}
+
+input[aria-invalid='true'] {
+  background: var(--color-error-soft);
+  border-color: var(--color-error);
+}

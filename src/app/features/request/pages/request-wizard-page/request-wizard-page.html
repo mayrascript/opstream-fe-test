@@ -1,0 +1,35 @@
+@if (requestSession.schema(); as schema) {
+  <div class="wizard-page">
+    <aside class="progress-panel">
+      <a class="back-link" href="/" aria-label="Cancel request and return home">← All requests</a>
+      <div class="request-title">
+        <small>New request</small>
+        <strong>{{ schema.title }}</strong>
+      </div>
+      <app-wizard-progress [sections]="schema.sections" [activeIndex]="activeIndex()" />
+    </aside>
+
+    <section class="form-panel">
+      <div class="validation-announcement" aria-live="assertive">
+        {{ validationAnnouncement() }}
+      </div>
+      @if (activeSection(); as section) {
+        @if (activeGroup(); as group) {
+          <app-section-form
+            [section]="section"
+            [group]="group"
+            [attempted]="attempted()"
+            [isFirst]="activeIndex() === 0"
+            [isLast]="activeIndex() === schema.sections.length - 1"
+            [submitting]="submitting()"
+            [saveStates]="requestSession.saveStates()"
+            (previousRequested)="previous()"
+            (nextRequested)="next()"
+            (submitRequested)="submit()"
+            (retryRequested)="retryQuestion($event)"
+          />
+        }
+      }
+    </section>
+  </div>
+}
