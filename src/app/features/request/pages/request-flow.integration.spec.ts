@@ -43,6 +43,41 @@ describe('request routing flow', () => {
 
   afterEach(() => session.reset());
 
+  it('selects one purchase category before starting the request', async () => {
+    await harness.navigateByUrl('/', SchemaChooserPage);
+    await harness.fixture.whenStable();
+    const element = harness.routeNativeElement! as HTMLElement;
+    const chips = element.querySelectorAll<HTMLButtonElement>('.schema-chip');
+    expect([...chips].map((chip) => chip.textContent?.trim())).toEqual(['Software', 'Hardware']);
+    expect(chips[0].getAttribute('aria-pressed')).toBe('false');
+    expect(chips[1].getAttribute('aria-pressed')).toBe('false');
+
+    chips[1].click();
+    await harness.fixture.whenStable();
+    expect(chips[0].getAttribute('aria-pressed')).toBe('false');
+    expect(chips[1].getAttribute('aria-pressed')).toBe('true');
+  });
+
+  it('announces a missing category and starts only after a selection', async () => {
+    await harness.navigateByUrl('/', SchemaChooserPage);
+    await harness.fixture.whenStable();
+    const element = harness.routeNativeElement! as HTMLElement;
+    const start = [...element.querySelectorAll<HTMLButtonElement>('button')].find(
+      (button) => button.textContent?.trim() === 'Start',
+    )!;
+
+    start.click();
+    await harness.fixture.whenStable();
+    expect(element.textContent).toContain('Choose what you need to purchase before starting.');
+    expect(document.activeElement).toBe(element.querySelector('.schema-chip'));
+    expect(router.url).toBe('/');
+
+    element.querySelector<HTMLButtonElement>('.schema-chip')!.click();
+    start.click();
+    await harness.fixture.whenStable();
+    expect(router.url).toBe('/request/software-request/requested-item');
+  });
+
   it('blocks invalid navigation and focuses the first missing answer', async () => {
     session.start(REQUEST_SCHEMAS[0]);
     await harness.navigateByUrl('/request/software-request/requested-item', RequestWizardPage);
@@ -92,6 +127,7 @@ describe('request routing flow', () => {
 
     await harness.navigateByUrl(`/summary/${summary.requestId}`, RequestSummaryPage);
     const element = harness.routeNativeElement! as HTMLElement;
+    expect(element.textContent).toContain('Awesome!');
     expect(element.textContent).toContain('Laptop');
     expect(element.textContent).toContain('Yes');
     expect(element.textContent).toContain('Not provided');

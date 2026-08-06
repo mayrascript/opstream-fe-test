@@ -1,24 +1,31 @@
 input {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-sm);
-  color: var(--color-ink);
+  background: var(--ds-control-background);
+  border: 1px solid var(--ds-control-border);
+  border-radius: var(--ds-radius-control);
+  color: var(--ds-text-primary);
+  font-size: 1rem;
   inline-size: 100%;
-  min-block-size: 3rem;
-  padding: 0.75rem 0.875rem;
+  min-block-size: 40px;
+  padding: 8px 12px;
 }
 
 input:hover {
-  border-color: var(--color-muted);
+  border-color: var(--ds-text-tertiary);
 }
 
 input:focus-visible {
-  border-color: var(--color-accent-strong);
-  box-shadow: var(--focus-ring);
+  border-color: var(--ds-focus);
+  box-shadow: var(--ds-focus-ring);
   outline: 0;
 }
 
 input[aria-invalid='true'] {
-  background: var(--color-error-soft);
-  border-color: var(--color-error);
+  background: var(--ds-error-soft);
+  border-color: var(--ds-error);
+}
+
+@media (pointer: coarse) {
+  input {
+    min-block-size: 48px;
+  }
 }

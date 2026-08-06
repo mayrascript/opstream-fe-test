@@ -10,11 +10,13 @@ describe('App', () => {
     }).compileComponents();
   });
 
-  it('renders the product shell', async () => {
+  it('renders the full-viewport router shell without an application header', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
 
     expect(fixture.componentInstance).toBeTruthy();
-    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Request desk');
+    expect(element.querySelector('#main-content')).toBeTruthy();
+    expect(element.querySelector('header')).toBeNull();
   });
 });

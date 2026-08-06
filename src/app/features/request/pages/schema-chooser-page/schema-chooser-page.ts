@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  computed,
+  inject,
+  signal,
+  viewChildren,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { RequestSchema } from '../../../../core/models/request.models';
@@ -17,19 +26,41 @@ export class SchemaChooserPage {
   private readonly session = inject(RequestSessionService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly schemaChips = viewChildren<ElementRef<HTMLButtonElement>>('schemaChip');
 
   protected readonly schemas = signal<RequestSchema[]>([]);
   protected readonly loading = signal(true);
   protected readonly error = signal('');
+  protected readonly selectedSchemaId = signal<string | null>(null);
+  protected readonly selectionError = signal('');
+  protected readonly selectedSchema = computed(() =>
+    this.schemas().find((schema) => schema.id === this.selectedSchemaId()),
+  );
 
   constructor() {
     this.session.reset();
     this.loadSchemas();
   }
 
-  protected choose(schema: RequestSchema): void {
+  protected selectSchema(schema: RequestSchema): void {
+    this.selectedSchemaId.set(schema.id);
+    this.selectionError.set('');
+  }
+
+  protected start(): void {
+    const schema = this.selectedSchema();
+    if (!schema) {
+      this.selectionError.set('Choose what you need to purchase before starting.');
+      this.schemaChips()[0]?.nativeElement.focus();
+      return;
+    }
+
     this.session.start(schema);
     void this.router.navigate(['/request', schema.id, schema.sections[0].id]);
+  }
+
+  protected schemaLabel(schema: RequestSchema): string {
+    return schema.title.replace(/ request$/i, '');
   }
 
   protected loadSchemas(): void {

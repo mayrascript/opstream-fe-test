@@ -1,39 +1,40 @@
 .radio-options {
-  display: grid;
-  gap: 0.625rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
 }
 
 .radio-option {
   align-items: center;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
   cursor: pointer;
   display: flex;
-  gap: 0.625rem;
-  min-block-size: 3rem;
-  padding: 0.625rem 0.75rem;
-}
-
-.radio-option:has(input:checked) {
-  background: var(--color-accent-soft);
-  border-color: var(--color-accent-strong);
-}
-
-.radio-option:has(input[aria-invalid='true']) {
-  border-color: var(--color-error);
+  font-size: 0.875rem;
+  gap: 8px;
+  min-block-size: 40px;
+  padding-inline: 2px;
 }
 
 input {
-  accent-color: var(--color-accent-strong);
-  block-size: 1.125rem;
+  accent-color: var(--ds-brand-main);
+  block-size: 16px;
   flex: 0 0 auto;
-  inline-size: 1.125rem;
+  inline-size: 16px;
+}
+
+input[aria-invalid='true'] {
+  outline: 2px solid var(--ds-error);
+  outline-offset: 2px;
 }
 
 @media (max-width: 34rem) {
   .radio-options {
-    grid-template-columns: 1fr;
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+@media (pointer: coarse) {
+  .radio-option {
+    min-block-size: 48px;
   }
 }

@@ -1,47 +1,8 @@
 :host {
   display: block;
-  min-block-size: 100%;
-}
-
-.app-header {
-  align-items: center;
-  block-size: 4.5rem;
-  display: flex;
-  justify-content: space-between;
-  margin-inline: auto;
-  max-inline-size: 90rem;
-  padding-inline: clamp(1rem, 4vw, 4rem);
-}
-
-.brand {
-  align-items: center;
-  color: var(--color-white);
-  display: inline-flex;
-  font-size: 1.0625rem;
-  font-weight: 720;
-  gap: 0.625rem;
-  text-decoration: none;
-}
-
-.brand__mark {
-  align-items: center;
-  background: var(--color-accent);
-  block-size: 2rem;
-  border-radius: 0.625rem 0.25rem 0.625rem 0.25rem;
-  color: var(--color-ink);
-  display: inline-flex;
-  font-size: 0.875rem;
-  justify-content: center;
-  inline-size: 2rem;
-}
-
-.workspace-label {
-  color: var(--color-text-on-dark-muted);
-  font-size: 0.8125rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  min-block-size: 100dvh;
 }
 
 main {
-  min-block-size: calc(100dvh - 4.5rem);
+  min-block-size: 100dvh;
 }

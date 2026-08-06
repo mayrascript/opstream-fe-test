@@ -5,15 +5,16 @@
 .button {
   align-items: center;
   border: 1px solid transparent;
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-control);
   cursor: pointer;
   display: inline-flex;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  gap: 8px;
   justify-content: center;
-  min-block-size: 3rem;
-  padding: 0.75rem 1.25rem;
+  min-block-size: 40px;
+  padding: 8px 16px;
+  text-transform: uppercase;
   transition:
     background-color 160ms ease,
     border-color 160ms ease,
@@ -25,31 +26,38 @@
 }
 
 .button--primary {
-  background: var(--color-accent);
-  color: var(--color-ink);
+  background: var(--ds-brand-main);
+  box-shadow: var(--ds-control-shadow);
+  color: var(--ds-text-primary);
 }
 
 .button--primary:hover:not(:disabled) {
-  background: #7bd0b8;
+  background: var(--ds-brand-hover);
 }
 
 .button--secondary {
-  background: var(--color-surface);
-  border-color: var(--color-border-strong);
-  color: var(--color-ink);
+  background: var(--ds-surface);
+  border-color: var(--ds-border-emphasis);
+  color: var(--ds-text-primary);
 }
 
 .button--secondary:hover:not(:disabled),
 .button--quiet:hover:not(:disabled) {
-  background: var(--color-surface-soft);
+  background: var(--ds-surface-subtle);
 }
 
 .button--quiet {
   background: transparent;
-  color: var(--color-muted);
+  color: var(--ds-text-tertiary);
 }
 
 .button:disabled {
   cursor: wait;
   opacity: 0.58;
+}
+
+@media (pointer: coarse) {
+  .button {
+    min-block-size: 48px;
+  }
 }

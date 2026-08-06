@@ -2,10 +2,10 @@
   align-items: center;
   cursor: pointer;
   display: inline-flex;
-  font-size: 0.9375rem;
-  font-weight: 650;
-  gap: 0.75rem;
-  min-block-size: 3rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  gap: 8px;
+  min-block-size: 40px;
 }
 
 input {
@@ -18,38 +18,44 @@ input {
 
 .toggle__track {
   align-items: center;
-  background: var(--color-border-strong);
+  background: var(--ds-border-emphasis);
   border-radius: 999px;
   display: flex;
-  block-size: 1.75rem;
-  inline-size: 3rem;
-  padding: 0.1875rem;
+  block-size: 18px;
+  inline-size: 32px;
+  padding: 2px;
   transition: background-color 160ms ease;
 }
 
 .toggle__track span {
-  background: var(--color-white);
-  block-size: 1.375rem;
+  background: var(--ds-surface);
+  block-size: 14px;
   border-radius: 50%;
   box-shadow: 0 1px 3px rgb(0 0 0 / 20%);
-  inline-size: 1.375rem;
+  inline-size: 14px;
   transition: transform 160ms ease;
 }
 
 input:checked + .toggle__track {
-  background: var(--color-accent-strong);
+  background: var(--ds-brand-main);
 }
 
 input:checked + .toggle__track span {
-  transform: translateX(1.25rem);
+  transform: translateX(14px);
 }
 
 input:focus-visible + .toggle__track {
-  box-shadow: var(--focus-ring);
-  outline: 2px solid var(--color-accent-strong);
+  box-shadow: var(--ds-focus-ring);
+  outline: 2px solid var(--ds-focus);
   outline-offset: 2px;
 }
 
 input[aria-invalid='true'] + .toggle__track {
-  outline: 2px solid var(--color-error);
+  outline: 2px solid var(--ds-error);
+}
+
+@media (pointer: coarse) {
+  .toggle {
+    min-block-size: 48px;
+  }
 }

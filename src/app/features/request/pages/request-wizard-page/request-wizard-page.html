@@ -1,15 +1,10 @@
 @if (requestSession.schema(); as schema) {
   <div class="wizard-page">
     <aside class="progress-panel">
-      <a class="back-link" href="/" aria-label="Cancel request and return home">← All requests</a>
-      <div class="request-title">
-        <small>New request</small>
-        <strong>{{ schema.title }}</strong>
-      </div>
       <app-wizard-progress [sections]="schema.sections" [activeIndex]="activeIndex()" />
     </aside>
 
-    <section class="form-panel">
+    <main class="form-panel">
       <div class="validation-announcement" aria-live="assertive">
         {{ validationAnnouncement() }}
       </div>
@@ -30,6 +25,6 @@
           />
         }
       }
-    </section>
+    </main>
   </div>
 }

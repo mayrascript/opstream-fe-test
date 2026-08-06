@@ -1,22 +1,14 @@
-<nav aria-label="Request progress">
-  <p class="progress-label">Request progress</p>
-  <ol>
+<nav aria-label="Request pages">
+  <ol role="list">
     @for (section of sections(); track section.id; let index = $index) {
       <li
         [class.is-active]="index === activeIndex()"
         [class.is-complete]="index < activeIndex()"
         [attr.aria-current]="index === activeIndex() ? 'step' : null"
       >
-        <span class="step-number">{{ index < activeIndex() ? '✓' : index + 1 }}</span>
-        <span>
-          <small>Step {{ index + 1 }}</small>
-          <strong>{{ section.title }}</strong>
-        </span>
+        <span>Page {{ index + 1 }}</span>
+        <span class="visually-hidden">: {{ section.title }}</span>
       </li>
     }
-    <li [class.is-active]="activeIndex() === sections().length">
-      <span class="step-number">{{ sections().length + 1 }}</span>
-      <span><small>Final step</small><strong>Review</strong></span>
-    </li>
   </ol>
 </nav>

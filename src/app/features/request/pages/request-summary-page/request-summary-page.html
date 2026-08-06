@@ -1,30 +1,37 @@
 @if (requestSession.summary(); as summary) {
   @if (requestSession.schema(); as schema) {
     <section class="summary-page">
-      <header class="summary-hero">
-        <span class="success-mark" aria-hidden="true">✓</span>
-        <p class="eyebrow">Request submitted</p>
-        <h1>Your request is ready.</h1>
-        <p>{{ schema.title }} · Reference {{ summary.requestId.slice(0, 8).toUpperCase() }}</p>
-      </header>
-
       <div class="summary-card">
-        @for (section of schema.sections; track section.id) {
-          <section class="summary-section">
-            <h2>{{ section.title }}</h2>
-            <dl>
-              @for (field of section.fields; track field.id) {
-                <div>
-                  <dt>{{ field.label }}</dt>
-                  <dd>{{ displayValue(summary.answers[field.id.toString()]) }}</dd>
-                </div>
-              }
-            </dl>
-          </section>
-        }
+        <header class="summary-hero">
+          <span class="success-mark" aria-hidden="true">🧁</span>
+          <h1>Awesome!</h1>
+          <p>Your request has been submitted successfully.</p>
+        </header>
+
+        <div class="summary-details">
+          @for (section of schema.sections; track section.id) {
+            <section class="summary-section">
+              <h2>{{ section.title }}</h2>
+              <dl>
+                @for (field of section.fields; track field.id) {
+                  <div>
+                    <dt>{{ field.label }}</dt>
+                    <dd>{{ displayValue(summary.answers[field.id.toString()]) }}</dd>
+                  </div>
+                }
+              </dl>
+            </section>
+          }
+        </div>
 
         <footer>
-          <p>Submitted {{ summary.createdAt.toLocaleString() }}</p>
+          <div class="summary-meta">
+            <p>{{ schema.title }}</p>
+            <p class="summary-reference">
+              Reference {{ summary.requestId.slice(0, 8).toUpperCase() }} ·
+              {{ summary.createdAt.toLocaleString() }}
+            </p>
+          </div>
           <app-button (click)="createNew()">Create new request</app-button>
         </footer>
       </div>

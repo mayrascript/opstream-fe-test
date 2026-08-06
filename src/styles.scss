@@ -1,34 +1,54 @@
 :root {
-  --color-canvas: #3d4347;
-  --color-canvas-deep: #30363a;
-  --color-surface: #ffffff;
-  --color-surface-soft: #f5f7f6;
-  --color-accent: #68c4aa;
-  --color-accent-strong: #277c68;
-  --color-accent-soft: #e7f6f1;
-  --color-ink: #202725;
-  --color-muted: #68736f;
-  --color-subtle: #89928f;
-  --color-border: #d8dfdc;
-  --color-border-strong: #aab5b1;
+  --ds-canvas: #f6f6f7;
+  --ds-surface: #ffffff;
+  --ds-surface-subtle: #f8f8f8;
+  --ds-brand-main: #1db496;
+  --ds-brand-hover: #18a98c;
+  --ds-brand-soft: #e8f8f4;
+  --ds-text-primary: #26292d;
+  --ds-text-secondary: #50545a;
+  --ds-text-tertiary: #747980;
+  --ds-text-muted: #95999f;
+  --ds-border-soft: #eeeeef;
+  --ds-border: #e5e5e5;
+  --ds-border-emphasis: #a8acb1;
+  --ds-control-background: #ffffff;
+  --ds-control-border: #a8acb1;
+  --ds-focus: #087965;
+  --ds-error: #b42318;
+  --ds-error-soft: #fef0ed;
+  --ds-warning: #986400;
+  --ds-card-shadow: 0 2px 4px rgb(0 0 0 / 7%);
+  --ds-control-shadow: 0 0 12px rgb(0 0 0 / 8%);
+  --ds-radius-control: 4px;
+  --ds-radius-card: 8px;
+  --ds-radius-chooser: 25px;
+  --ds-focus-ring: 0 0 0 3px rgb(29 180 150 / 30%);
+
+  /* Compatibility aliases for domain components that do not own visual direction. */
+  --color-canvas: var(--ds-canvas);
+  --color-surface: var(--ds-surface);
+  --color-surface-soft: var(--ds-surface-subtle);
+  --color-accent: var(--ds-brand-main);
+  --color-accent-strong: var(--ds-focus);
+  --color-accent-soft: var(--ds-brand-soft);
+  --color-ink: var(--ds-text-primary);
+  --color-muted: var(--ds-text-tertiary);
+  --color-subtle: var(--ds-text-muted);
+  --color-border: var(--ds-border);
+  --color-border-strong: var(--ds-control-border);
   --color-error: #b42318;
   --color-error-soft: #fef0ed;
   --color-warning: #986400;
   --color-white: #ffffff;
-  --color-text-on-dark-muted: #c9d0cd;
-  --shadow-panel: 0 1.5rem 4rem rgb(18 24 22 / 20%);
-  --radius-sm: 0.5rem;
-  --radius-md: 0.875rem;
-  --radius-lg: 1.25rem;
-  --focus-ring: 0 0 0 3px rgb(104 196 170 / 40%);
+  --color-text-on-dark-muted: var(--ds-text-tertiary);
+  --shadow-panel: var(--ds-card-shadow);
+  --radius-sm: var(--ds-radius-control);
+  --radius-md: var(--ds-radius-card);
+  --radius-lg: var(--ds-radius-card);
+  --focus-ring: var(--ds-focus-ring);
   color-scheme: light;
-  font-family:
-    Inter,
-    ui-sans-serif,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    sans-serif;
+  font-family: Gilroy, Inter, system-ui, sans-serif;
   font-synthesis: none;
 }
 
@@ -37,21 +57,22 @@
 }
 
 html {
-  background: var(--color-canvas);
+  background: var(--ds-canvas);
   min-block-size: 100%;
 }
 
 body {
-  background:
-    radial-gradient(circle at 80% -10%, rgb(104 196 170 / 10%), transparent 34rem),
-    var(--color-canvas);
-  color: var(--color-ink);
+  background: var(--ds-canvas);
+  color: var(--ds-text-primary);
+  line-height: 1.5;
   margin: 0;
   min-block-size: 100%;
 }
 
 button,
-input {
+input,
+textarea,
+select {
   font: inherit;
 }
 
@@ -61,7 +82,7 @@ a {
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-accent);
+  outline: 3px solid var(--ds-focus);
   outline-offset: 3px;
 }
 

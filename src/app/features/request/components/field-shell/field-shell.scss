@@ -1,22 +1,25 @@
 .field-shell {
-  border: 0;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-control);
   margin: 0;
   min-inline-size: 0;
-  padding: 0;
+  padding: 16px;
+  transition: border-color 140ms ease;
 }
 
 .field-shell__heading {
   align-items: start;
   display: flex;
-  gap: 1rem;
+  gap: 16px;
   justify-content: space-between;
-  margin-block-end: 0.625rem;
+  margin-block-end: 8px;
 }
 
 legend {
-  color: var(--color-ink);
-  font-size: 0.9375rem;
-  font-weight: 680;
+  color: var(--ds-text-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
   line-height: 1.4;
   padding: 0;
 }
@@ -27,5 +30,9 @@ legend {
 }
 
 :host-context(.field-shell--invalid) {
-  color: var(--color-error);
+  color: var(--ds-error);
+}
+
+.field-shell--invalid {
+  border-color: var(--ds-error);
 }

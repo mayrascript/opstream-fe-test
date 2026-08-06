@@ -17,7 +17,7 @@ test.beforeEach(async ({ page }) => {
 
 test('schema chooser has no detectable WCAG 2.2 AA violations', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'What are you requesting?' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'What do you need to purchase?' })).toBeVisible();
   await expectNoAccessibilityViolations(page);
 });
 
@@ -25,7 +25,8 @@ test('dynamic request fields and validation have no detectable WCAG 2.2 AA viola
   page,
 }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: /Hardware Request/ }).click();
+  await page.getByRole('button', { name: 'Hardware' }).click();
+  await page.getByRole('button', { name: 'Start' }).click();
   await page.getByRole('button', { name: 'Next' }).click();
   await expect(page.locator('#question-75329829348985')).toBeFocused();
   await expectNoAccessibilityViolations(page);

@@ -1,8 +1,6 @@
 <form [formGroup]="group()" (ngSubmit)="handleSubmit()" novalidate>
   <div class="section-heading">
-    <p class="eyebrow">Request details</p>
     <h1>{{ section().title }}</h1>
-    <p>Complete the information below. Your answers save automatically.</p>
   </div>
 
   <div class="fields">
@@ -24,7 +22,7 @@
       <span></span>
     }
     <app-button type="submit" [disabled]="submitting()">
-      {{ isLast() ? (submitting() ? 'Submitting…' : 'Submit request') : 'Next' }}
+      {{ isLast() ? (submitting() ? 'Submitting…' : 'Submit') : 'Next' }}
     </app-button>
   </div>
 </form>
