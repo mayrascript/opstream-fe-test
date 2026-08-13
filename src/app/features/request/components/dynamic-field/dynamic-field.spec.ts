@@ -27,9 +27,22 @@ describe('DynamicField', () => {
     expect((await render(type)).querySelector(selector)).not.toBeNull();
   });
 
+  it.each(['text', 'number', 'toggle'] as const)(
+    'connects the visible %s label to its native control',
+    async (type) => {
+      const element = await render(type);
+      const label = element.querySelector<HTMLLabelElement>('.field-shell__label')!;
+      const control = element.querySelector<HTMLInputElement>('input')!;
+
+      expect(label.htmlFor).toBe(control.id);
+      expect(label.htmlFor).toBe('question-42');
+    },
+  );
+
   it('renders native radios for every option', async () => {
     const element = await render('radio', ['USA', 'UK', 'Other']);
     expect(element.querySelectorAll('input[type="radio"]')).toHaveLength(3);
+    expect(element.querySelector('.field-shell__label')?.tagName).toBe('SPAN');
   });
 
   it('shows a connected error after a navigation attempt', async () => {

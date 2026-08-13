@@ -22,6 +22,8 @@ async function computed(page: Page, selector: string) {
       boxShadow: style.boxShadow,
       color: style.color,
       fontFamily: style.fontFamily,
+      fontSize: style.fontSize,
+      fontWeight: style.fontWeight,
       outlineColor: style.outlineColor,
       outlineOffset: style.outlineOffset,
       outlineWidth: style.outlineWidth,
@@ -100,6 +102,7 @@ test('wizard resolves the measured desktop design contract', async ({ page, view
   expectNear(card.y, 197);
   expectNear(card.width, 704);
   expectNear(card.height, 125);
+  expectNear(card.y - (heading.y + heading.height), 12);
   expectNear(input.x, 496);
   expectNear(input.y, 250);
   expectNear(input.width, 656);
@@ -169,9 +172,9 @@ test('mobile wizard rows size to content without the previous vertical void', as
 
 test('tablet wizard uses the compact rail and fluid form composition', async ({
   page,
-}, testInfo) => {
-  test.skip(testInfo.project.name !== 'desktop');
-  await page.setViewportSize({ width: 1024, height: 900 });
+  viewport,
+}) => {
+  test.skip(viewport?.width !== 1024);
   await chooseSoftware(page);
 
   const navigation = await rect(page, 'app-wizard-progress nav');
@@ -180,4 +183,78 @@ test('tablet wizard uses the compact rail and fluid form composition', async ({
   expectNear(panel.x - (navigation.x + navigation.width), 24, 2);
   expect(panel.width).toBeGreaterThan(600);
   expect(panel.x + panel.width).toBeLessThanOrEqual(1008);
+});
+
+test('wizard restores the full rail immediately above the tablet breakpoint', async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop');
+  await page.setViewportSize({ width: 1025, height: 900 });
+  await chooseSoftware(page);
+
+  const navigation = await rect(page, 'app-wizard-progress nav');
+  const panel = await rect(page, '.form-panel');
+  expectNear(navigation.width, 250);
+  expectNear(panel.x - (navigation.x + navigation.width), 32, 2);
+});
+
+test('coarse-pointer selector controls expose 48 pixel targets', async ({ page }, testInfo) => {
+  test.skip(!['mobile', 'tablet'].includes(testInfo.project.name));
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Software' }).click();
+
+  const selected = await rect(page, '.schema-chip.is-selected');
+  const unselected = await rect(page, '.schema-chip:not(.is-selected)');
+  const start = await rect(page, '.start-button');
+  expect(selected.height).toBeGreaterThanOrEqual(48);
+  expect(unselected.height).toBeGreaterThanOrEqual(48);
+  expect(start.height).toBeGreaterThanOrEqual(48);
+});
+
+test('radio options expose the documented hover and typography treatment', async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop');
+  await chooseSoftware(page);
+  await page.locator('#question-1758177604').fill('Design software');
+  await page.locator('#question-75484637462').fill('1');
+  await page.getByRole('button', { name: 'Next' }).click();
+
+  const option = page.locator('.radio-option').first();
+  await option.hover();
+  const style = await computed(page, '.radio-option:first-child');
+  expect(style.backgroundColor).toBe('rgb(248, 248, 248)');
+  expect(style.borderColor).toBe('rgb(116, 121, 128)');
+  expect(style.fontSize).toBe('14px');
+  expect(style.fontWeight).toBe('500');
+});
+
+test('documented typography resolves on actions, save states, and summary answers', async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop');
+  await page.goto('/');
+  const startStyle = await computed(page, '.start-button');
+  expect(startStyle.fontSize).toBe('14px');
+  expect(startStyle.fontWeight).toBe('700');
+
+  await chooseSoftware(page);
+  await page.locator('#question-1758177604').fill('Design software');
+  const saveStyle = await computed(page, '.save-state');
+  expect(saveStyle.fontSize).toBe('12px');
+  expect(saveStyle.fontWeight).toBe('500');
+
+  await page.locator('#question-75484637462').fill('1');
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.locator('#question-4957463729').fill('Northstar Software');
+  await page.getByLabel('USA').check();
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByRole('heading', { name: 'Awesome!' })).toBeVisible();
+
+  const summaryMessage = await computed(page, '.summary-hero p');
+  expect(summaryMessage.fontSize).toBe('12px');
+  expect(summaryMessage.fontWeight).toBe('500');
+  const summaryAnswer = await computed(page, 'dl div:first-child dd');
+  expect(summaryAnswer.fontSize).toBe('14px');
+  expect(summaryAnswer.fontWeight).toBe('500');
 });

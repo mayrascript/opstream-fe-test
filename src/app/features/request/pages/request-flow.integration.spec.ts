@@ -76,6 +76,7 @@ describe('request routing flow', () => {
     start.click();
     await harness.fixture.whenStable();
     expect(router.url).toBe('/request/software-request/requested-item');
+    expect(document.activeElement?.textContent).toContain('Requested Item');
   });
 
   it('blocks invalid navigation and focuses the first missing answer', async () => {
@@ -103,12 +104,14 @@ describe('request routing flow', () => {
     await harness.fixture.whenStable();
 
     expect(router.url).toBe('/request/software-request/vendor-info');
+    expect(document.activeElement?.textContent).toContain('Vendor Information');
     (harness.routeNativeElement! as HTMLElement)
       .querySelectorAll<HTMLButtonElement>('button')[0]
       .click();
     await harness.fixture.whenStable();
 
     expect(router.url).toBe('/request/software-request/requested-item');
+    expect(document.activeElement?.textContent).toContain('Requested Item');
     expect(firstGroup.controls['1758177604'].value).toBe('Design software');
   });
 
@@ -149,10 +152,12 @@ describe('request routing flow', () => {
     expect(element.textContent).toContain('Laptop');
     expect(element.textContent).toContain('Yes');
     expect(element.textContent).toContain('Not provided');
+    expect(document.activeElement?.textContent).toContain('Awesome!');
 
     element.querySelector<HTMLButtonElement>('button')!.click();
     await harness.fixture.whenStable();
     expect(router.url).toBe('/');
     expect(session.session()).toBeNull();
+    expect(document.activeElement?.textContent).toContain('What do you need to purchase?');
   });
 });

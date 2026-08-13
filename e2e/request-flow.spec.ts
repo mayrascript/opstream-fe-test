@@ -39,7 +39,7 @@ test('starts a request with keyboard-only navigation', async ({ page }) => {
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'Start' })).toBeFocused();
   await page.keyboard.press('Enter');
-  await expect(page.getByRole('heading', { name: 'Requested Item' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Requested Item' })).toBeFocused();
 });
 
 test('completes the Software request and resets from the read-only summary', async ({ page }) => {
@@ -47,11 +47,11 @@ test('completes the Software request and resets from the read-only summary', asy
   await completeSoftwareRequest(page);
   await page.getByRole('button', { name: 'Submit' }).click();
 
-  await expect(page.getByRole('heading', { name: 'Awesome!' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Awesome!' })).toBeFocused();
   await expect(page.getByText('Design collaboration suite')).toBeVisible();
   await expect(page.locator('input')).toHaveCount(0);
   await page.getByRole('button', { name: 'Create new request' }).click();
-  await expect(page.getByRole('heading', { name: 'What do you need to purchase?' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'What do you need to purchase?' })).toBeFocused();
 });
 
 test('completes the Hardware request and preserves answers with Previous', async ({ page }) => {
@@ -61,7 +61,9 @@ test('completes the Hardware request and preserves answers with Previous', async
   await page.getByRole('switch', { name: 'Requires shipping' }).check();
   await expect(page.locator('#question-2389182391823812')).toBeChecked();
   await page.getByRole('button', { name: 'Next' }).click();
+  await expect(page.getByRole('heading', { name: 'Vendor Information' })).toBeFocused();
   await page.getByRole('button', { name: 'Previous' }).click();
+  await expect(page.getByRole('heading', { name: 'Requested Item' })).toBeFocused();
   await expect(page.locator('#question-75329829348985')).toHaveValue('Developer laptop');
   await page.getByRole('button', { name: 'Next' }).click();
   await page.locator('#question-9542834823423').fill('Acme Devices');
@@ -88,6 +90,28 @@ test('accepts numeric zero when the schema declares no minimum', async ({ page }
   await page.getByRole('button', { name: 'Next' }).click();
 
   await expect(page).toHaveURL(/vendor-info$/);
+});
+
+test('restores heading focus when browser history changes the active section', async ({ page }) => {
+  await chooseRequest(page, 'Software Request');
+  await page.locator('#question-1758177604').fill('Design software');
+  await page.locator('#question-75484637462').fill('1');
+  await page.getByRole('button', { name: 'Next' }).click();
+  await expect(page.getByRole('heading', { name: 'Vendor Information' })).toBeFocused();
+
+  await page.goBack();
+  await expect(page.getByRole('heading', { name: 'Requested Item' })).toBeFocused();
+});
+
+test('clicking a visible field label focuses its native control', async ({ page }) => {
+  await chooseRequest(page, 'Hardware Request');
+  const itemName = page.locator('#question-75329829348985');
+  await page.locator('label[for="question-75329829348985"]').click();
+  await expect(itemName).toBeFocused();
+
+  const shippingToggle = page.locator('#question-2389182391823812');
+  await page.locator('#question-2389182391823812-label').click();
+  await expect(shippingToggle).toBeFocused();
 });
 
 test('validates the entire request before a direct final-section submission', async ({ page }) => {
@@ -117,28 +141,34 @@ test('shows retrying and recovers after a temporary autosave failure', async ({ 
   await page.locator('#question-1758177604').fill('Temporary failure');
 
   await expect(page.getByText('Error — retrying…')).toBeVisible({ timeout: 3000 });
-  await expect(page.getByText('Saved')).toBeVisible({ timeout: 4000 });
+  await expect(page.getByText('Saved', { exact: true })).toBeVisible({ timeout: 4000 });
 });
 
 test('keeps final submission blocked until a failed answer is retried', async ({ page }) => {
   await chooseRequest(page, 'Software Request');
   await completeSoftwareRequest(page);
-  await expect(page.getByText('Saved')).toHaveCount(3, { timeout: 4000 });
+  await expect(page.getByText('Saved', { exact: true })).toHaveCount(3, { timeout: 4000 });
 
   await page.evaluate(() => {
     (window as unknown as { failSaves: boolean }).failSaves = true;
   });
   await page.locator('#question-4957463729').fill('Failing vendor');
-  await expect(page.getByText('Not saved')).toBeVisible({ timeout: 5000 });
+  await expect(page.getByText('Not saved', { exact: true })).toBeVisible({ timeout: 5000 });
   await page.getByRole('button', { name: 'Submit' }).click();
   await expect(page).toHaveURL(/vendor-info$/);
   await expect(page.getByText(/could not be saved/i)).toBeVisible();
+  const retry = page.getByRole('button', { name: /Retry saving Vendor/i });
+  await expect(retry).toBeFocused();
 
   await page.evaluate(() => {
     (window as unknown as { failSaves: boolean }).failSaves = false;
   });
-  await page.getByRole('button', { name: 'Retry' }).click();
-  await expect(page.getByText('Saved')).toHaveCount(3, { timeout: 3000 });
+  await retry.click();
+  const pendingRetry = page.locator('[data-save-retry]');
+  await expect(pendingRetry).toBeFocused();
+  await expect(pendingRetry).toHaveAttribute('aria-disabled', 'true');
+  await expect(page.getByText('Saved', { exact: true })).toHaveCount(3, { timeout: 3000 });
+  await expect(page.locator('[role="group"][aria-label="Vendor Name save status"]')).toBeFocused();
   await page.getByRole('button', { name: 'Submit' }).click();
   await expect(page.getByRole('heading', { name: 'Awesome!' })).toBeVisible();
 });

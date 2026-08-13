@@ -8,14 +8,28 @@
   </legend>
 
   <div class="field-shell__heading">
-    <span class="field-shell__label" [id]="labelId()">
-      {{ field().label }}
-      @if (field().required) {
-        <span class="required" aria-hidden="true">*</span>
-        <span class="visually-hidden">(required)</span>
-      }
-    </span>
-    <app-save-status-indicator [state]="saveState()" (retryRequested)="retryRequested.emit()" />
+    @if (labelFor(); as controlId) {
+      <label class="field-shell__label" [id]="labelId()" [for]="controlId">
+        {{ field().label }}
+        @if (field().required) {
+          <span class="required" aria-hidden="true">*</span>
+          <span class="visually-hidden">(required)</span>
+        }
+      </label>
+    } @else {
+      <span class="field-shell__label" [id]="labelId()">
+        {{ field().label }}
+        @if (field().required) {
+          <span class="required" aria-hidden="true">*</span>
+          <span class="visually-hidden">(required)</span>
+        }
+      </span>
+    }
+    <app-save-status-indicator
+      [state]="saveState()"
+      [fieldLabel]="field().label"
+      (retryRequested)="retryRequested.emit()"
+    />
   </div>
 
   <div class="field-shell__control">

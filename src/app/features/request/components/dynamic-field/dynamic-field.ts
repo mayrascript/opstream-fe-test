@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { AnswerControl } from '../../../../core/forms/request-form.types';
 import { QuestionSaveState, SchemaField } from '../../../../core/models/request.models';
 import { NumberField } from '../../fields/number-field/number-field';
@@ -20,6 +20,9 @@ export class DynamicField {
   readonly attempted = input(false);
   readonly saveState = input<QuestionSaveState>();
   readonly retryRequested = output<number>();
+  protected readonly labelFor = computed(() =>
+    this.field().type === 'radio' ? null : `question-${this.field().id}`,
+  );
 
   protected shouldShowError(): boolean {
     return this.control().invalid && (this.control().touched || this.attempted());

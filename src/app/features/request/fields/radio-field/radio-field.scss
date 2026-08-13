@@ -12,6 +12,7 @@
   cursor: pointer;
   display: flex;
   font-size: 0.875rem;
+  font-weight: 500;
   gap: 8px;
   min-block-size: 32px;
   padding: 4px 12px;
@@ -46,6 +47,13 @@ input[aria-invalid='true'] {
 input:focus-visible[aria-invalid='true'] {
   outline: 3px solid var(--ds-focus);
   outline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .radio-option:hover {
+    background: var(--ds-surface-subtle);
+    border-color: var(--ds-control-border);
+  }
 }
 
 @media (max-width: 34rem) {

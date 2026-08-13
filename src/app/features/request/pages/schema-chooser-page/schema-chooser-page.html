@@ -1,4 +1,10 @@
-<section class="chooser-page" aria-labelledby="chooser-title">
+<section
+  class="chooser-page"
+  [attr.aria-labelledby]="!loading() && !error() ? 'chooser-title' : null"
+  [attr.aria-label]="
+    loading() ? 'Loading request types' : error() ? 'Request types unavailable' : null
+  "
+>
   <div class="chooser-card">
     @if (loading()) {
       <div class="state-card" aria-live="polite">
@@ -13,7 +19,7 @@
     } @else {
       <div class="chooser-content">
         <div class="chooser-question">
-          <h1 id="chooser-title">What do you need to purchase?</h1>
+          <h1 #chooserHeading id="chooser-title" tabindex="-1">What do you need to purchase?</h1>
 
           <div class="schema-chips" role="group" aria-label="Purchase category">
             @for (schema of schemas(); track schema.id) {

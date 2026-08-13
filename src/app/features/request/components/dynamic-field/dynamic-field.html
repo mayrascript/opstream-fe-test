@@ -3,6 +3,7 @@
   [control]="control()"
   [showError]="shouldShowError()"
   [saveState]="saveState()"
+  [labelFor]="labelFor()"
   (retryRequested)="retryRequested.emit(field().id)"
 >
   @switch (field().type) {

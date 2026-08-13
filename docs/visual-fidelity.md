@@ -19,15 +19,15 @@ The default positional tolerance is `±4px`, reserved for font rasterization and
 
 ## 3. Visual regression snapshots
 
-Playwright covers the selector, both Software pages, Hardware with the switch state, and the summary at:
+Playwright covers the selector, both Software pages, Hardware with the switch state, and the summary through dedicated projects at:
 
 - desktop: `1440 × 1080px`;
 - tablet: `1024 × 900px`;
 - mobile: `390 × 844px`.
 
-Animations and save-state text are stabilized before capture. Request IDs and timestamps are not part of the visual contract. The snapshots protect the production schema-driven views; the measured contract protects their relationship to the supplied task frames.
+Animations and save-state text are stabilized before the primary screen captures. Dedicated question-card snapshots cover saving, retrying, saved, and final-error states instead of hiding those states from visual verification. Request IDs and timestamps are not part of the visual contract. The snapshots protect the production schema-driven views; the measured contract protects their relationship to the supplied task frames.
 
-Shared macOS/Linux baselines use the bundled Inter font and mask the platform emoji so browser text rasterization is the only remaining platform variance. A screenshot may differ by at most 1% of pixels at the standard pixelmatch threshold. Geometry is not delegated to that tolerance because the structural assertions above continue to enforce source coordinates and sizes directly; any Ubuntu visual difference is retained as a CI artifact for review.
+Platform-specific macOS and Linux baselines use the bundled Inter font and mask the platform emoji. Keeping separate references accounts only for browser text rasterization differences; it does not broaden the visual tolerance. A screenshot may differ by at most 1% of pixels at the standard pixelmatch threshold. Geometry is not delegated to that tolerance because the structural assertions above continue to enforce source coordinates and sizes directly; any Ubuntu visual difference is retained as a CI artifact for review.
 
 ## Intentional content adaptations
 

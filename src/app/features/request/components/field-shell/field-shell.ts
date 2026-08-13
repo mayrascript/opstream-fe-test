@@ -16,6 +16,7 @@ export class FieldShell {
   readonly control = input.required<AnswerControl>();
   readonly showError = input(false);
   readonly saveState = input<QuestionSaveState>();
+  readonly labelFor = input<string | null>(null);
   readonly retryRequested = output<void>();
   readonly errorId = computed(() => `question-${this.field().id}-error`);
   readonly labelId = computed(() => `question-${this.field().id}-label`);

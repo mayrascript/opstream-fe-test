@@ -124,7 +124,7 @@ h1 {
   cursor: pointer;
   display: flex;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 700;
   justify-content: center;
   min-block-size: 40px;
   padding: 8px 16px;
@@ -132,12 +132,14 @@ h1 {
 }
 
 .start-button:hover {
-  background: var(--ds-brand-hover);
+  background: var(--ds-brand-strong);
 }
 
 .state-card {
   align-items: center;
   display: flex;
+  font-size: 0.875rem;
+  font-weight: 500;
   gap: 12px;
   justify-content: center;
   margin: auto;
@@ -157,6 +159,8 @@ h1 {
   border-radius: var(--ds-radius-control);
   color: inherit;
   cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 700;
   min-block-size: 40px;
   padding-inline: 16px;
 }
@@ -221,11 +225,14 @@ h1 {
   .schema-chip {
     justify-content: center;
   }
+}
 
-  @media (pointer: coarse) {
-    .schema-chip,
-    .start-button {
-      min-block-size: 48px;
-    }
+@media (pointer: coarse) {
+  .schema-chip,
+  .schema-chip.is-selected,
+  .start-button,
+  .state-card button {
+    block-size: auto;
+    min-block-size: 48px;
   }
 }

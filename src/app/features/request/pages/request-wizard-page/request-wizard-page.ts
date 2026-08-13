@@ -35,6 +35,7 @@ export class RequestWizardPage {
   protected readonly attempted = signal(false);
   protected readonly submitting = signal(false);
   protected readonly validationAnnouncement = signal('');
+  private focusIntent: 'heading' | 'invalid' = 'heading';
 
   constructor() {
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
@@ -61,6 +62,10 @@ export class RequestWizardPage {
       this.activeGroup.set(form.controls[schema.sections[index].id]);
       this.attempted.set(false);
       this.validationAnnouncement.set('');
+      if (this.focusIntent === 'heading') {
+        this.focusSectionHeading();
+      }
+      this.focusIntent = 'heading';
     });
   }
 
@@ -100,6 +105,7 @@ export class RequestWizardPage {
       this.validationAnnouncement.set(
         'One or more answers could not be saved. Use Retry beside the affected answer before submitting.',
       );
+      this.focusFirstSaveError();
       return;
     }
 
@@ -140,6 +146,7 @@ export class RequestWizardPage {
     const invalidIndex = schema.sections.findIndex((section) => form.controls[section.id]?.invalid);
     if (invalidIndex >= 0 && invalidIndex !== this.activeIndex()) {
       const invalidSection = schema.sections[invalidIndex];
+      this.focusIntent = 'invalid';
       await this.router.navigate(['/request', schema.id, invalidSection.id]);
     }
 
@@ -170,5 +177,17 @@ export class RequestWizardPage {
       },
       { injector: this.injector },
     );
+  }
+
+  private focusSectionHeading(): void {
+    afterNextRender(() => document.querySelector<HTMLElement>('.section-heading h1')?.focus(), {
+      injector: this.injector,
+    });
+  }
+
+  private focusFirstSaveError(): void {
+    afterNextRender(() => document.querySelector<HTMLButtonElement>('[data-save-retry]')?.focus(), {
+      injector: this.injector,
+    });
   }
 }

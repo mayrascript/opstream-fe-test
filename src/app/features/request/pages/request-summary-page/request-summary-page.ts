@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Injector,
+  inject,
+  viewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnswerValue } from '../../../../core/models/request.models';
 import { Button } from '../../../../ui/button/button';
@@ -14,6 +22,8 @@ import { RequestSessionService } from '../../services/request-session';
 export class RequestSummaryPage {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly injector = inject(Injector);
+  private readonly summaryHeading = viewChild<ElementRef<HTMLHeadingElement>>('summaryHeading');
   protected readonly requestSession = inject(RequestSessionService);
 
   constructor() {
@@ -24,7 +34,12 @@ export class RequestSummaryPage {
       !this.requestSession.schema()
     ) {
       void this.router.navigateByUrl('/', { replaceUrl: true });
+      return;
     }
+
+    afterNextRender(() => this.summaryHeading()?.nativeElement.focus(), {
+      injector: this.injector,
+    });
   }
 
   protected displayValue(value: AnswerValue): string {

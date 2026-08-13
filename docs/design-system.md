@@ -30,6 +30,8 @@ The exact `States/Red` value is not exposed in read-only mode. The implemented e
 
 The source family is Gilroy. It is not exportable from the supplied file, so the application requests `Gilroy` when the user has a licensed local copy and bundles Inter as the deterministic fallback.
 
+The stack is exposed through `--ds-font-family`. Browser screenshot tests override that token with bundled Inter and wait for the font before capture, preventing a locally installed Gilroy copy from changing shared baselines.
+
 | Style             |  Size |           Weight | Line height |
 | ----------------- | ----: | ---------------: | ----------: |
 | `Headings/H1`     | 24 px |              700 |        150% |
@@ -64,6 +66,7 @@ The source family is Gilroy. It is not exportable from the supplied file, so the
 - Wizard actions: `32px` visual height, `12px` text, uppercase, `16px` inline padding.
 - Selector and completion actions: `40px` visual height, `14px` text, `16px` inline padding.
 - Coarse-pointer layouts expand the interactive height to at least `48px` without changing the desktop reference geometry.
+- Primary hover reuses `Brand/Green37`; feature components do not define an additional hover color.
 
 ### Inputs
 
@@ -78,6 +81,7 @@ The source family is Gilroy. It is not exportable from the supplied file, so the
 - Each native radio remains in the accessibility tree.
 - Options use compact `32px` pill containers, an `8px` gap, and a deterministic custom-drawn `16px` radio face.
 - Selected, invalid, hover, and focus states include shape or text feedback in addition to color.
+- Hover treatment is enabled only when the browser reports a hover-capable pointer.
 
 ### Toggle
 
@@ -138,11 +142,13 @@ The answer table renders every schema question. Its card may grow beyond the ref
 ## Responsive and accessibility contract
 
 - At `1024px` and below, the wizard rail reduces to `200px` and the form remains fluid.
+- At `1025px` and above, the wizard restores the `250px` rail and `32px` column gap when the composition fits.
 - Below `768px`, navigation moves above the form and grid rows size to content; no viewport-height row stretching is allowed.
 - At `390px`, outer padding is `16px`, cards fill the available width, radio choices stack when necessary, and controls expose at least `48px` pointer targets.
+- Every coarse-pointer selector action, including the selected chip and recovery actions, exposes at least `48px` height at any viewport width.
 - Native form, fieldset, legend, input, radio, and checkbox semantics are retained.
 - Validation uses `aria-invalid`, connected `aria-describedby`, an assertive summary, visible adjacent messages, and focus transfer to the first invalid control.
-- Save status uses a polite live region. Reduced-motion preferences disable non-essential transitions.
+- Save status keeps a polite live region mounted, includes the field label in every announcement, and preserves focus during manual retry. Reduced-motion preferences disable non-essential transitions.
 
 ## Governance
 

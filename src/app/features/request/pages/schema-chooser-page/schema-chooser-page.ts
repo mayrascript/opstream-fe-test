@@ -1,11 +1,14 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
+  Injector,
   computed,
   inject,
   signal,
+  viewChild,
   viewChildren,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -26,7 +29,9 @@ export class SchemaChooserPage {
   private readonly session = inject(RequestSessionService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly injector = inject(Injector);
   private readonly schemaChips = viewChildren<ElementRef<HTMLButtonElement>>('schemaChip');
+  private readonly chooserHeading = viewChild<ElementRef<HTMLHeadingElement>>('chooserHeading');
 
   protected readonly schemas = signal<RequestSchema[]>([]);
   protected readonly loading = signal(true);
@@ -73,6 +78,9 @@ export class SchemaChooserPage {
         next: (schemas) => {
           this.schemas.set(schemas);
           this.loading.set(false);
+          afterNextRender(() => this.chooserHeading()?.nativeElement.focus(), {
+            injector: this.injector,
+          });
         },
         error: () => {
           this.error.set('We could not load the request types. Please try again.');

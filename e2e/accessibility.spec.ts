@@ -14,8 +14,18 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('schema chooser has no detectable WCAG 2.2 AA violations', async ({ page }) => {
+  await page.clock.install();
   await page.goto('/');
+  await expect(page.locator('.chooser-page')).toHaveAttribute(
+    'aria-label',
+    'Loading request types',
+  );
+  await expect(page.locator('.chooser-page')).not.toHaveAttribute('aria-labelledby', /.+/);
+  await page.clock.fastForward(250);
+  await page.clock.resume();
   await expect(page.getByRole('heading', { name: 'What do you need to purchase?' })).toBeVisible();
+  await expect(page.locator('.chooser-page')).toHaveAttribute('aria-labelledby', 'chooser-title');
+  await expect(page.locator('.chooser-page')).not.toHaveAttribute('aria-label', /.+/);
   await expectNoAccessibilityViolations(page);
   await page.getByRole('button', { name: 'Software' }).click();
   await expectNoAccessibilityViolations(page);

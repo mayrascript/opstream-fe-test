@@ -6,7 +6,6 @@
   --ds-surface-subtle: #f8f8f8;
   --ds-brand-main: #1db496;
   --ds-brand-strong: #1aa287;
-  --ds-brand-hover: #18a98c;
   --ds-brand-light: #f2fdfb;
   --ds-brand-nav: rgb(19 136 112 / 5%);
   --ds-text-primary: #26292d;
@@ -29,6 +28,7 @@
   --ds-radius-card: 8px;
   --ds-radius-chooser: 25px;
   --ds-focus-ring: 0 0 0 3px rgb(29 180 150 / 30%);
+  --ds-font-family: Gilroy, 'Inter Variable', Inter, system-ui, sans-serif;
 
   /* Compatibility aliases for domain components that do not own visual direction. */
   --color-canvas: var(--ds-canvas);
@@ -53,7 +53,7 @@
   --radius-lg: var(--ds-radius-card);
   --focus-ring: var(--ds-focus-ring);
   color-scheme: light;
-  font-family: Gilroy, 'Inter Variable', Inter, system-ui, sans-serif;
+  font-family: var(--ds-font-family);
   font-synthesis: none;
 }
 

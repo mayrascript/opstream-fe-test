@@ -60,6 +60,7 @@ h1 {
 .summary-hero p {
   color: var(--ds-text-secondary);
   font-size: 0.75rem;
+  font-weight: 500;
   line-height: 1.5;
   margin: 0;
 }
@@ -111,7 +112,7 @@ dt {
 dd {
   color: var(--ds-text-primary);
   font-size: 0.875rem;
-  font-weight: 400;
+  font-weight: 500;
   margin: 0;
   overflow-wrap: anywhere;
 }

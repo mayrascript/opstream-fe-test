@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './e2e',
-  snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}-{projectName}{ext}',
+  snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}-{projectName}-{platform}{ext}',
   expect: {
     toHaveScreenshot: {
       maxDiffPixelRatio: 0.01,
@@ -28,6 +28,15 @@ export default defineConfig({
     {
       name: 'mobile',
       use: { ...devices['Pixel 7'], viewport: { width: 390, height: 844 } },
+    },
+    {
+      name: 'tablet',
+      testMatch: /(?:visual|design-contract)\.spec\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        hasTouch: true,
+        viewport: { width: 1024, height: 900 },
+      },
     },
   ],
 });
