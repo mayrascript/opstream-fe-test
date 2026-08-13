@@ -8,17 +8,30 @@
   border-radius: var(--ds-radius-control);
   cursor: pointer;
   display: inline-flex;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   gap: 8px;
   justify-content: center;
-  min-block-size: 40px;
-  padding: 8px 16px;
-  text-transform: uppercase;
+  padding-inline: 16px;
   transition:
     background-color 160ms ease,
     border-color 160ms ease,
     transform 160ms ease;
+}
+
+.button--compact {
+  block-size: 32px;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  padding-block: 6px;
+  text-transform: uppercase;
+}
+
+.button--regular {
+  min-block-size: 40px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding-block: 8px;
 }
 
 .button:not(:disabled):active {
@@ -37,7 +50,7 @@
 
 .button--secondary {
   background: var(--ds-surface);
-  border-color: var(--ds-border-emphasis);
+  border-color: var(--ds-border);
   color: var(--ds-text-primary);
 }
 
@@ -58,6 +71,7 @@
 
 @media (pointer: coarse) {
   .button {
+    block-size: auto;
     min-block-size: 48px;
   }
 }

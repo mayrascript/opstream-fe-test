@@ -17,11 +17,11 @@
 
   <div class="form-actions">
     @if (!isFirst()) {
-      <app-button variant="secondary" (click)="previousRequested.emit()">Previous</app-button>
-    } @else {
-      <span></span>
+      <app-button size="compact" variant="secondary" (click)="previousRequested.emit()">
+        Previous
+      </app-button>
     }
-    <app-button type="submit" [disabled]="submitting()">
+    <app-button size="compact" type="submit" [disabled]="submitting()">
       {{ isLast() ? (submitting() ? 'Submitting…' : 'Submit') : 'Next' }}
     </app-button>
   </div>

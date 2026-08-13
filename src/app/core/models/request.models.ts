@@ -1,12 +1,12 @@
-import { FormControl, FormRecord } from '@angular/forms';
-
 export type FieldType = 'text' | 'number' | 'radio' | 'toggle';
 export type AnswerValue = string | number | boolean | null;
 export type SaveStatus = 'idle' | 'saving' | 'retrying' | 'saved' | 'error';
+export type SchemaIcon = 'software' | 'hardware' | 'generic';
 
 export interface RequestSchema {
   id: string;
   title: string;
+  icon?: SchemaIcon;
   sections: SchemaSection[];
 }
 
@@ -44,7 +44,3 @@ export interface RequestSummary {
   createdAt: Date;
   answers: Record<string, AnswerValue>;
 }
-
-export type AnswerControl = FormControl<AnswerValue>;
-export type SectionFormGroup = FormRecord<AnswerControl>;
-export type RequestFormGroup = FormRecord<SectionFormGroup>;

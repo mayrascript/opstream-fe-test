@@ -6,19 +6,25 @@
   font-weight: 500;
   gap: 8px;
   min-block-size: 40px;
+  position: relative;
 }
 
 input {
-  block-size: 1px;
-  clip-path: inset(50%);
-  inline-size: 1px;
-  overflow: hidden;
+  block-size: 40px;
+  cursor: pointer;
+  inline-size: 32px;
+  inset-block-start: 50%;
+  inset-inline-start: 0;
+  margin: 0;
+  opacity: 0;
   position: absolute;
+  transform: translateY(-50%);
+  z-index: 1;
 }
 
 .toggle__track {
   align-items: center;
-  background: var(--ds-border-emphasis);
+  background: var(--ds-control-border);
   border-radius: 999px;
   display: flex;
   block-size: 18px;
@@ -31,7 +37,7 @@ input {
   background: var(--ds-surface);
   block-size: 14px;
   border-radius: 50%;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 20%);
+  box-shadow: var(--ds-toggle-thumb-shadow);
   inline-size: 14px;
   transition: transform 160ms ease;
 }
@@ -45,13 +51,17 @@ input:checked + .toggle__track span {
 }
 
 input:focus-visible + .toggle__track {
-  box-shadow: var(--ds-focus-ring);
-  outline: 2px solid var(--ds-focus);
-  outline-offset: 2px;
+  outline: 3px solid var(--ds-focus);
+  outline-offset: 3px;
 }
 
 input[aria-invalid='true'] + .toggle__track {
   outline: 2px solid var(--ds-error);
+}
+
+input:focus-visible[aria-invalid='true'] + .toggle__track {
+  outline: 3px solid var(--ds-focus);
+  outline-offset: 3px;
 }
 
 @media (pointer: coarse) {

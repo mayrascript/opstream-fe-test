@@ -14,8 +14,8 @@ form {
 
 h1 {
   color: var(--ds-text-primary);
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.125rem;
+  font-weight: 600;
   line-height: 1.5;
   margin: 0;
 }
@@ -28,14 +28,15 @@ h1 {
 .form-actions {
   align-items: center;
   display: flex;
-  justify-content: space-between;
+  gap: 12px;
+  justify-content: flex-start;
   padding-block-start: 12px;
 }
 
 @container (max-width: 30rem) {
   .form-actions {
     align-items: stretch;
-    flex-direction: column-reverse;
+    flex-direction: column;
     gap: 12px;
   }
 

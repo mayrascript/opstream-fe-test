@@ -37,6 +37,10 @@ export class RequestSummaryPage {
     return String(value);
   }
 
+  protected isEmpty(value: AnswerValue): boolean {
+    return value === null || value === '';
+  }
+
   protected createNew(): void {
     this.requestSession.reset();
     void this.router.navigateByUrl('/');

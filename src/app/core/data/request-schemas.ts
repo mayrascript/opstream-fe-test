@@ -4,10 +4,11 @@ export const REQUEST_SCHEMAS: RequestSchema[] = [
   {
     id: 'software-request',
     title: 'Software Request',
+    icon: 'software',
     sections: [
       {
         id: 'requested-item',
-        title: 'Requested item',
+        title: 'Requested Item',
         fields: [
           { id: 1758177604, label: 'Item Name', type: 'text', required: true },
           { id: 75484637462, label: 'Quantity', type: 'number', required: true },
@@ -15,7 +16,7 @@ export const REQUEST_SCHEMAS: RequestSchema[] = [
       },
       {
         id: 'vendor-info',
-        title: 'Vendor information',
+        title: 'Vendor Information',
         fields: [
           { id: 4957463729, label: 'Vendor Name', type: 'text', required: true },
           {
@@ -25,7 +26,7 @@ export const REQUEST_SCHEMAS: RequestSchema[] = [
             required: true,
             options: ['USA', 'UK', 'Other'],
           },
-          { id: 6482937561, label: 'Website', type: 'text' },
+          { id: 6482937561, label: 'Website', type: 'text', required: false },
         ],
       },
     ],
@@ -33,13 +34,14 @@ export const REQUEST_SCHEMAS: RequestSchema[] = [
   {
     id: 'hardware-request',
     title: 'Hardware Request',
+    icon: 'hardware',
     sections: [
       {
         id: 'requested-item',
-        title: 'Requested item',
+        title: 'Requested Item',
         fields: [
           { id: 75329829348985, label: 'Item Name', type: 'text', required: true },
-          { id: 85781623672346, label: 'Quantity', type: 'number' },
+          { id: 85781623672346, label: 'Quantity', type: 'number', required: false },
           {
             id: 2389182391823812,
             label: 'Requires shipping',
@@ -50,7 +52,7 @@ export const REQUEST_SCHEMAS: RequestSchema[] = [
       },
       {
         id: 'vendor-info',
-        title: 'Vendor information',
+        title: 'Vendor Information',
         fields: [
           { id: 9542834823423, label: 'Vendor Name', type: 'text', required: true },
           {

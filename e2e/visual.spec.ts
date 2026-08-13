@@ -26,14 +26,26 @@ test.beforeEach(async ({ page }) => {
 test('schema chooser matches the Figma composition', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'What do you need to purchase?' })).toBeVisible();
+  await page.getByRole('button', { name: 'Software' }).click();
   await expect(page).toHaveScreenshot('schema-chooser.png', { animations: 'disabled' });
 });
 
 test('Software page one matches the Figma wizard composition', async ({ page }) => {
   await chooseCategory(page, 'Software');
-  await expect(page.getByRole('heading', { name: 'Requested item' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Requested Item' })).toBeVisible();
   await hideTransientSaveState(page);
   await expect(page).toHaveScreenshot('software-page-one.png', { animations: 'disabled' });
+});
+
+test('Software page one keeps the compact tablet composition', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop');
+  await page.setViewportSize({ width: 1024, height: 900 });
+  await chooseCategory(page, 'Software');
+  await expect(page.getByRole('heading', { name: 'Requested Item' })).toBeVisible();
+  await hideTransientSaveState(page);
+  await expect(page).toHaveScreenshot('software-page-one-tablet.png', {
+    animations: 'disabled',
+  });
 });
 
 test('Software page two keeps the question-card rhythm', async ({ page }) => {
@@ -41,7 +53,7 @@ test('Software page two keeps the question-card rhythm', async ({ page }) => {
   await page.locator('#question-1758177604').fill('Design collaboration suite');
   await page.locator('#question-75484637462').fill('12');
   await page.getByRole('button', { name: 'Next' }).click();
-  await expect(page.getByRole('heading', { name: 'Vendor information' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Vendor Information' })).toBeVisible();
   await hideTransientSaveState(page);
   await expect(page).toHaveScreenshot('software-page-two.png', { animations: 'disabled' });
 });
@@ -66,7 +78,7 @@ test('summary matches the centered Figma card', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Awesome!' })).toBeVisible();
   await expect(page).toHaveScreenshot('request-summary.png', {
     animations: 'disabled',
-    mask: [page.locator('.summary-reference')],
-    maskColor: '#f8f8f8',
+    mask: [page.locator('.success-mark')],
+    maskColor: '#ffffff',
   });
 });

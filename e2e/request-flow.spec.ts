@@ -39,7 +39,7 @@ test('starts a request with keyboard-only navigation', async ({ page }) => {
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'Start' })).toBeFocused();
   await page.keyboard.press('Enter');
-  await expect(page.getByRole('heading', { name: 'Requested item' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Requested Item' })).toBeVisible();
 });
 
 test('completes the Software request and resets from the read-only summary', async ({ page }) => {
@@ -58,7 +58,7 @@ test('completes the Hardware request and preserves answers with Previous', async
   await chooseRequest(page, 'Hardware Request');
   await page.locator('#question-75329829348985').fill('Developer laptop');
   await page.locator('#question-85781623672346').fill('2');
-  await page.locator('label.toggle').click();
+  await page.getByRole('switch', { name: 'Requires shipping' }).check();
   await expect(page.locator('#question-2389182391823812')).toBeChecked();
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByRole('button', { name: 'Previous' }).click();
@@ -79,6 +79,30 @@ test('blocks invalid section navigation and focuses the first field', async ({ p
   await expect(page.locator('#question-1758177604')).toBeFocused();
   await expect(page.getByText('This field is required.').first()).toBeVisible();
   await expect(page).toHaveURL(/requested-item$/);
+});
+
+test('accepts numeric zero when the schema declares no minimum', async ({ page }) => {
+  await chooseRequest(page, 'Software Request');
+  await page.locator('#question-1758177604').fill('Design software');
+  await page.locator('#question-75484637462').fill('0');
+  await page.getByRole('button', { name: 'Next' }).click();
+
+  await expect(page).toHaveURL(/vendor-info$/);
+});
+
+test('validates the entire request before a direct final-section submission', async ({ page }) => {
+  await chooseRequest(page, 'Software Request');
+  await page.evaluate(() => {
+    window.history.pushState({}, '', '/request/software-request/vendor-info');
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  });
+  await expect(page).toHaveURL(/vendor-info$/);
+  await page.locator('#question-4957463729').fill('Northstar Software');
+  await page.getByLabel('USA').check();
+  await page.getByRole('button', { name: 'Submit' }).click();
+
+  await expect(page).toHaveURL(/requested-item$/);
+  await expect(page.locator('#question-1758177604')).toBeFocused();
 });
 
 test('shows retrying and recovers after a temporary autosave failure', async ({ page }) => {
@@ -117,6 +141,23 @@ test('keeps final submission blocked until a failed answer is retried', async ({
   await expect(page.getByText('Saved')).toHaveCount(3, { timeout: 3000 });
   await page.getByRole('button', { name: 'Submit' }).click();
   await expect(page.getByRole('heading', { name: 'Awesome!' })).toBeVisible();
+});
+
+test('completes the primary workflow without browser runtime errors', async ({ page }) => {
+  const runtimeErrors: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'error') {
+      runtimeErrors.push(`console: ${message.text()}`);
+    }
+  });
+  page.on('pageerror', (error) => runtimeErrors.push(`page: ${error.message}`));
+
+  await chooseRequest(page, 'Software Request');
+  await completeSoftwareRequest(page);
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await expect(page.getByRole('heading', { name: 'Awesome!' })).toBeVisible();
+
+  expect(runtimeErrors).toEqual([]);
 });
 
 test('redirects a reloaded request route when its in-memory session is gone', async ({ page }) => {

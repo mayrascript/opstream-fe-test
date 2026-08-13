@@ -1,6 +1,8 @@
 .wizard-page {
+  align-content: start;
   display: grid;
   gap: 32px;
+  grid-auto-rows: max-content;
   grid-template-columns: 250px minmax(0, 704px);
   margin-inline: auto;
   max-inline-size: 1060px;
@@ -15,19 +17,24 @@
 
 .form-panel {
   min-inline-size: 0;
+  position: relative;
 }
 
 .validation-announcement {
-  color: var(--ds-error);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  min-block-size: 20px;
-  padding-inline: 1px;
+  block-size: 1px;
+  clip-path: inset(50%);
+  inline-size: 1px;
+  margin: -1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
 }
 
 @media (max-width: 68rem) {
   .wizard-page {
+    align-content: start;
     gap: 24px;
+    grid-auto-rows: max-content;
     grid-template-columns: 200px minmax(0, 704px);
     justify-content: center;
     padding-block-start: 96px;

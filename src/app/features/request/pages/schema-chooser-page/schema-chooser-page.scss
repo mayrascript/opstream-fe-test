@@ -8,7 +8,7 @@
 }
 
 .chooser-card {
-  align-items: center;
+  align-items: flex-start;
   background: var(--ds-surface);
   border-radius: var(--ds-radius-chooser);
   box-shadow: var(--ds-card-shadow);
@@ -21,10 +21,13 @@
 
 .chooser-content {
   align-items: center;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 32px;
   inline-size: 100%;
+  min-block-size: 240px;
+  padding: 32px;
 }
 
 .chooser-question {
@@ -33,7 +36,7 @@
   flex-direction: column;
   gap: 32px;
   inline-size: 100%;
-  min-block-size: 168px;
+  position: relative;
 }
 
 h1 {
@@ -47,6 +50,7 @@ h1 {
 }
 
 .schema-chips {
+  align-items: center;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -57,16 +61,17 @@ h1 {
 .schema-chip {
   align-items: center;
   background: var(--ds-surface);
-  border: 1px solid var(--ds-border-emphasis);
+  border: 1px solid var(--ds-border);
   border-radius: 999px;
   color: var(--ds-text-secondary);
   cursor: pointer;
   display: inline-flex;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 500;
   gap: 8px;
   min-block-size: 42px;
-  padding: 8px 14px;
+  block-size: 42px;
+  padding: 4px 12px;
   transition:
     background-color 140ms ease,
     border-color 140ms ease,
@@ -85,20 +90,27 @@ h1 {
 
 .schema-chip:hover,
 .schema-chip.is-selected {
-  background: var(--ds-brand-soft);
+  background: var(--ds-brand-light);
   border-color: var(--ds-brand-main);
-  color: var(--ds-focus);
+  color: var(--ds-text-primary);
 }
 
 .schema-chip.is-selected {
-  box-shadow: inset 0 0 0 1px var(--ds-brand-main);
+  block-size: 32px;
+  min-block-size: 32px;
+}
+
+.schema-chip.is-selected svg {
+  stroke: var(--ds-brand-main);
 }
 
 .selection-error {
   color: var(--ds-error);
   font-size: 0.75rem;
-  margin: -20px 0 0;
-  min-block-size: 18px;
+  inset-block-start: 100%;
+  margin: 4px 0 0;
+  min-block-size: 0;
+  position: absolute;
   text-align: center;
 }
 
@@ -128,6 +140,7 @@ h1 {
   display: flex;
   gap: 12px;
   justify-content: center;
+  margin: auto;
   min-block-size: 160px;
   padding: 24px;
   text-align: center;
@@ -160,6 +173,29 @@ h1 {
 @keyframes spin {
   to {
     transform: rotate(1turn);
+  }
+}
+
+@media (max-width: 48rem) {
+  .chooser-page {
+    padding-block-start: 32px;
+  }
+
+  .chooser-card {
+    min-block-size: min(489px, calc(100dvh - 64px));
+    padding: 40px 24px;
+  }
+
+  .chooser-content {
+    justify-content: center;
+    min-block-size: 100%;
+    padding: 24px 0;
+  }
+}
+
+@media (max-width: 25rem) {
+  .schema-chips {
+    inline-size: 100%;
   }
 }
 

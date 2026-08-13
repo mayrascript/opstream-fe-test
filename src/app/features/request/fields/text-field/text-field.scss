@@ -5,8 +5,9 @@ input {
   color: var(--ds-text-primary);
   font-size: 1rem;
   inline-size: 100%;
-  min-block-size: 40px;
-  padding: 8px 12px;
+  block-size: 48px;
+  line-height: 1.5;
+  padding: 11px 12px;
 }
 
 input:hover {
@@ -15,8 +16,8 @@ input:hover {
 
 input:focus-visible {
   border-color: var(--ds-focus);
-  box-shadow: var(--ds-focus-ring);
-  outline: 0;
+  outline: 3px solid var(--ds-focus);
+  outline-offset: 3px;
 }
 
 input[aria-invalid='true'] {
@@ -26,6 +27,6 @@ input[aria-invalid='true'] {
 
 @media (pointer: coarse) {
   input {
-    min-block-size: 48px;
+    block-size: 48px;
   }
 }

@@ -112,6 +112,24 @@ describe('request routing flow', () => {
     expect(firstGroup.controls['1758177604'].value).toBe('Design software');
   });
 
+  it('returns to the first invalid section when submitting from a direct final-section route', async () => {
+    session.start(REQUEST_SCHEMAS[0]);
+    const vendor = session.form()!.controls['vendor-info'];
+    vendor.controls['4957463729'].setValue('Vendor');
+    vendor.controls['8462736152'].setValue('USA');
+    await harness.navigateByUrl('/request/software-request/vendor-info', RequestWizardPage);
+
+    (harness.routeNativeElement! as HTMLElement)
+      .querySelector<HTMLButtonElement>('button[type="submit"]')!
+      .click();
+    await harness.fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+    await harness.fixture.whenStable();
+
+    expect(router.url).toBe('/request/software-request/requested-item');
+    expect(document.activeElement?.id).toBe('question-1758177604');
+  });
+
   it('redirects direct request routes when no in-memory session exists', async () => {
     await harness.navigateByUrl('/request/software-request/requested-item');
     await harness.fixture.whenStable();

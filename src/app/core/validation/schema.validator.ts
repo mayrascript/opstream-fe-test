@@ -1,6 +1,7 @@
-import { FieldType, RequestSchema } from '../models/request.models';
+import { FieldType, RequestSchema, SchemaIcon } from '../models/request.models';
 
 const FIELD_TYPES = new Set<FieldType>(['text', 'number', 'radio', 'toggle']);
+const SCHEMA_ICONS = new Set<SchemaIcon>(['software', 'hardware', 'generic']);
 
 export class SchemaValidationError extends Error {
   constructor(message: string) {
@@ -15,6 +16,9 @@ export function validateSchemas(schemas: RequestSchema[]): RequestSchema[] {
   for (const schema of schemas) {
     if (!schema.id || !schema.title || schema.sections.length === 0) {
       throw new SchemaValidationError('A schema is missing its identity or sections.');
+    }
+    if (schema.icon && !SCHEMA_ICONS.has(schema.icon)) {
+      throw new SchemaValidationError(`Schema ${schema.id} contains an unsupported icon.`);
     }
 
     for (const section of schema.sections) {

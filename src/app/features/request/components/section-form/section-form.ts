@@ -1,10 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-  QuestionSaveState,
-  SchemaSection,
-  SectionFormGroup,
-} from '../../../../core/models/request.models';
+import { SectionFormGroup } from '../../../../core/forms/request-form.types';
+import { QuestionSaveState, SchemaSection } from '../../../../core/models/request.models';
 import { Button } from '../../../../ui/button/button';
 import { DynamicField } from '../dynamic-field/dynamic-field';
 

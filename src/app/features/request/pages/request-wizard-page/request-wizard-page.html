@@ -4,7 +4,7 @@
       <app-wizard-progress [sections]="schema.sections" [activeIndex]="activeIndex()" />
     </aside>
 
-    <main class="form-panel">
+    <section class="form-panel">
       <div class="validation-announcement" aria-live="assertive">
         {{ validationAnnouncement() }}
       </div>
@@ -25,6 +25,6 @@
           />
         }
       }
-    </main>
+    </section>
   </div>
 }

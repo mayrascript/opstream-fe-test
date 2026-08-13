@@ -9,6 +9,8 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 })
 export class Button {
   readonly variant = input<'primary' | 'secondary' | 'quiet'>('primary');
+  readonly size = input<'compact' | 'regular'>('regular');
   readonly type = input<'button' | 'submit'>('button');
   readonly disabled = input(false);
+  readonly ariaLabel = input<string>();
 }

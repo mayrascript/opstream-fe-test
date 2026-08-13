@@ -7,6 +7,7 @@ import {
   distinctUntilChanged,
   EMPTY,
   filter,
+  finalize,
   firstValueFrom,
   map,
   retry,
@@ -18,11 +19,10 @@ import {
   timeout,
 } from 'rxjs';
 import { buildRequestForm, serializeAnswers } from '../../../core/forms/request-form.factory';
+import { AnswerControl, RequestFormGroup } from '../../../core/forms/request-form.types';
 import {
-  AnswerControl,
   AnswerValue,
   QuestionSaveState,
-  RequestFormGroup,
   RequestSchema,
   RequestSession,
   RequestSummary,
@@ -37,6 +37,8 @@ export class RequestSessionService {
   private readonly sessionState = signal<RequestSession | null>(null);
   private readonly summaryState = signal<RequestSummary | null>(null);
   private readonly saveState = signal<ReadonlyMap<number, QuestionSaveState>>(new Map());
+  private readonly saveVersions = new Map<number, number>();
+  private readonly manualSaveSubscriptions = new Map<number, Subscription>();
   private subscriptions = new Subscription();
 
   readonly schema = this.schemaState.asReadonly();
@@ -78,11 +80,26 @@ export class RequestSessionService {
 
   retryQuestion(questionId: number): void {
     const control = this.findControl(questionId);
-    if (!control || !this.sessionState()) {
+    const state = this.saveState().get(questionId);
+    if (!control || !this.sessionState() || state?.status !== 'error') {
       return;
     }
 
-    this.subscriptions.add(this.persist(questionId, control.value).subscribe());
+    const version = this.saveVersions.get(questionId) ?? 0;
+    const retrySubscription = new Subscription();
+    this.manualSaveSubscriptions.set(questionId, retrySubscription);
+    this.subscriptions.add(retrySubscription);
+    retrySubscription.add(
+      this.persist(questionId, control.value, version)
+        .pipe(
+          finalize(() => {
+            if (this.manualSaveSubscriptions.get(questionId) === retrySubscription) {
+              this.manualSaveSubscriptions.delete(questionId);
+            }
+          }),
+        )
+        .subscribe(),
+    );
   }
 
   async waitForSaves(): Promise<boolean> {
@@ -125,6 +142,8 @@ export class RequestSessionService {
     this.sessionState.set(null);
     this.summaryState.set(null);
     this.saveState.set(new Map());
+    this.saveVersions.clear();
+    this.manualSaveSubscriptions.clear();
   }
 
   private registerAutosave(schema: RequestSchema, form: RequestFormGroup): void {
@@ -137,11 +156,17 @@ export class RequestSessionService {
             .pipe(
               distinctUntilChanged(),
               tap((value) => {
+                this.manualSaveSubscriptions.get(field.id)?.unsubscribe();
+                this.manualSaveSubscriptions.delete(field.id);
+                const version = (this.saveVersions.get(field.id) ?? 0) + 1;
+                this.saveVersions.set(field.id, version);
                 this.updateSessionAnswer(field.id, value);
                 this.setQuestionState(field.id, { status: 'saving', error: undefined });
               }),
               debounceTime(750),
-              switchMap((value) => this.persist(field.id, value)),
+              switchMap((value) =>
+                this.persist(field.id, value, this.saveVersions.get(field.id) ?? 0),
+              ),
             )
             .subscribe(),
         );
@@ -149,32 +174,38 @@ export class RequestSessionService {
     }
   }
 
-  private persist(questionId: number, value: AnswerValue) {
+  private persist(questionId: number, value: AnswerValue, version: number) {
     const session = this.sessionState();
     if (!session) {
       return EMPTY;
     }
 
     return defer(() => {
-      this.setQuestionState(questionId, { status: 'saving', error: undefined });
+      this.setQuestionStateForVersion(questionId, version, {
+        status: 'saving',
+        error: undefined,
+      });
       return this.api.saveAnswer(session.requestId, questionId, value);
     }).pipe(
       retry({
         count: 2,
         delay: (_error, retryCount) => {
-          this.setQuestionState(questionId, { status: 'retrying', error: undefined });
+          this.setQuestionStateForVersion(questionId, version, {
+            status: 'retrying',
+            error: undefined,
+          });
           return timer(retryCount === 1 ? 500 : 1000);
         },
       }),
       tap(() =>
-        this.setQuestionState(questionId, {
+        this.setQuestionStateForVersion(questionId, version, {
           status: 'saved',
           lastSavedAt: new Date(),
           error: undefined,
         }),
       ),
       catchError((error: unknown) => {
-        this.setQuestionState(questionId, {
+        this.setQuestionStateForVersion(questionId, version, {
           status: 'error',
           error: error instanceof Error ? error.message : 'The answer could not be saved.',
         });
@@ -192,6 +223,16 @@ export class RequestSessionService {
     const current = next.get(questionId) ?? { questionId, status: 'idle' as const };
     next.set(questionId, { ...current, ...changes, questionId });
     this.saveState.set(next);
+  }
+
+  private setQuestionStateForVersion(
+    questionId: number,
+    version: number,
+    changes: Omit<Partial<QuestionSaveState>, 'questionId'>,
+  ): void {
+    if ((this.saveVersions.get(questionId) ?? 0) === version) {
+      this.setQuestionState(questionId, changes);
+    }
   }
 
   private updateSessionAnswer(questionId: number, value: AnswerValue): void {

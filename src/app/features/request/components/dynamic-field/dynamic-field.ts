@@ -1,9 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import {
-  AnswerControl,
-  QuestionSaveState,
-  SchemaField,
-} from '../../../../core/models/request.models';
+import { AnswerControl } from '../../../../core/forms/request-form.types';
+import { QuestionSaveState, SchemaField } from '../../../../core/models/request.models';
 import { NumberField } from '../../fields/number-field/number-field';
 import { RadioField } from '../../fields/radio-field/radio-field';
 import { TextField } from '../../fields/text-field/text-field';

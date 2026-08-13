@@ -4,35 +4,34 @@
       <div class="summary-card">
         <header class="summary-hero">
           <span class="success-mark" aria-hidden="true">🧁</span>
-          <h1>Awesome!</h1>
-          <p>Your request has been submitted successfully.</p>
+          <div class="summary-message">
+            <h1>Awesome!</h1>
+            <p>It works!</p>
+          </div>
         </header>
 
         <div class="summary-details">
-          @for (section of schema.sections; track section.id) {
-            <section class="summary-section">
-              <h2>{{ section.title }}</h2>
-              <dl>
-                @for (field of section.fields; track field.id) {
-                  <div>
-                    <dt>{{ field.label }}</dt>
-                    <dd>{{ displayValue(summary.answers[field.id.toString()]) }}</dd>
-                  </div>
-                }
-              </dl>
-            </section>
-          }
+          <h2>Summary</h2>
+          <div class="summary-table-heading" aria-hidden="true">
+            <span>Questions</span>
+            <span>Answer</span>
+          </div>
+          <dl>
+            @for (section of schema.sections; track section.id) {
+              @for (field of section.fields; track field.id) {
+                <div>
+                  <dt>{{ field.label }}</dt>
+                  <dd [class.is-empty]="isEmpty(summary.answers[field.id.toString()])">
+                    {{ displayValue(summary.answers[field.id.toString()]) }}
+                  </dd>
+                </div>
+              }
+            }
+          </dl>
         </div>
 
         <footer>
-          <div class="summary-meta">
-            <p>{{ schema.title }}</p>
-            <p class="summary-reference">
-              Reference {{ summary.requestId.slice(0, 8).toUpperCase() }} ·
-              {{ summary.createdAt.toLocaleString() }}
-            </p>
-          </div>
-          <app-button (click)="createNew()">Create new request</app-button>
+          <app-button (click)="createNew()">Create New Request</app-button>
         </footer>
       </div>
     </section>

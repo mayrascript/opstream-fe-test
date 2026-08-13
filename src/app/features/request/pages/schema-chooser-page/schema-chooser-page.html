@@ -16,7 +16,7 @@
           <h1 id="chooser-title">What do you need to purchase?</h1>
 
           <div class="schema-chips" role="group" aria-label="Purchase category">
-            @for (schema of schemas(); track schema.id; let index = $index) {
+            @for (schema of schemas(); track schema.id) {
               <button
                 #schemaChip
                 class="schema-chip"
@@ -25,18 +25,30 @@
                 [attr.aria-pressed]="selectedSchemaId() === schema.id"
                 (click)="selectSchema(schema)"
               >
-                @if (index === 0) {
-                  <svg aria-hidden="true" viewBox="0 0 16 16">
-                    <rect x="2" y="2" width="4" height="4" rx="0.75" />
-                    <rect x="10" y="2" width="4" height="4" rx="0.75" />
-                    <rect x="2" y="10" width="4" height="4" rx="0.75" />
-                    <rect x="10" y="10" width="4" height="4" rx="0.75" />
-                  </svg>
-                } @else {
-                  <svg aria-hidden="true" viewBox="0 0 16 16">
-                    <path d="M8 1.75 13.5 5v6L8 14.25 2.5 11V5L8 1.75Z" />
-                    <path d="m2.75 5.15 5.25 3 5.25-3M8 8.15v5.75" />
-                  </svg>
+                @switch (schema.icon ?? 'generic') {
+                  @case ('software') {
+                    <svg aria-hidden="true" viewBox="0 0 16 16">
+                      <rect x="2" y="2" width="4" height="4" rx="0.75" />
+                      <rect x="10" y="2" width="4" height="4" rx="0.75" />
+                      <rect x="2" y="10" width="4" height="4" rx="0.75" />
+                      <rect x="10" y="10" width="4" height="4" rx="0.75" />
+                    </svg>
+                  }
+                  @case ('hardware') {
+                    <svg aria-hidden="true" viewBox="0 0 16 16">
+                      <rect x="4" y="4" width="8" height="8" rx="1.5" />
+                      <rect x="6.5" y="6.5" width="3" height="3" rx="0.5" />
+                      <path
+                        d="M6 1.5V4M10 1.5V4M6 12v2.5M10 12v2.5M1.5 6H4M1.5 10H4M12 6h2.5M12 10h2.5"
+                      />
+                    </svg>
+                  }
+                  @default {
+                    <svg aria-hidden="true" viewBox="0 0 16 16">
+                      <path d="M3 5.5h10l-1 8H4l-1-8Z" />
+                      <path d="M5.5 5.5a2.5 2.5 0 0 1 5 0" />
+                    </svg>
+                  }
                 }
                 <span>{{ schemaLabel(schema) }}</span>
               </button>

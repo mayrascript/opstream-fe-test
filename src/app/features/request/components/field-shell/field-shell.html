@@ -1,18 +1,28 @@
-<fieldset class="field-shell" [class.field-shell--invalid]="showError()">
+<fieldset
+  class="field-shell"
+  [class.field-shell--invalid]="showError()"
+  [attr.aria-describedby]="showError() ? errorId() : null"
+>
+  <legend class="visually-hidden">
+    {{ field().label }}{{ field().required ? ' (required)' : '' }}
+  </legend>
+
   <div class="field-shell__heading">
-    <legend [id]="labelId()">
+    <span class="field-shell__label" [id]="labelId()">
       {{ field().label }}
       @if (field().required) {
         <span class="required" aria-hidden="true">*</span>
         <span class="visually-hidden">(required)</span>
       }
-    </legend>
+    </span>
     <app-save-status-indicator [state]="saveState()" (retryRequested)="retryRequested.emit()" />
   </div>
 
-  <ng-content />
+  <div class="field-shell__control">
+    <ng-content />
+  </div>
 
   @if (showError()) {
-    <app-form-error [errorId]="errorId()" />
+    <app-form-error [errorId]="errorId()" [message]="errorMessage()" />
   }
 </fieldset>

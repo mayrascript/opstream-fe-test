@@ -1,25 +1,30 @@
+@use '@fontsource-variable/inter';
+
 :root {
   --ds-canvas: #f6f6f7;
   --ds-surface: #ffffff;
   --ds-surface-subtle: #f8f8f8;
   --ds-brand-main: #1db496;
+  --ds-brand-strong: #1aa287;
   --ds-brand-hover: #18a98c;
-  --ds-brand-soft: #e8f8f4;
+  --ds-brand-light: #f2fdfb;
+  --ds-brand-nav: rgb(19 136 112 / 5%);
   --ds-text-primary: #26292d;
   --ds-text-secondary: #50545a;
   --ds-text-tertiary: #747980;
   --ds-text-muted: #95999f;
   --ds-border-soft: #eeeeef;
   --ds-border: #e5e5e5;
-  --ds-border-emphasis: #a8acb1;
+  --ds-border-emphasis: #747980;
   --ds-control-background: #ffffff;
-  --ds-control-border: #a8acb1;
+  --ds-control-border: #747980;
   --ds-focus: #087965;
   --ds-error: #b42318;
   --ds-error-soft: #fef0ed;
   --ds-warning: #986400;
   --ds-card-shadow: 0 2px 4px rgb(0 0 0 / 7%);
   --ds-control-shadow: 0 0 12px rgb(0 0 0 / 8%);
+  --ds-toggle-thumb-shadow: 0 1px 3px rgb(0 0 0 / 20%);
   --ds-radius-control: 4px;
   --ds-radius-card: 8px;
   --ds-radius-chooser: 25px;
@@ -31,7 +36,7 @@
   --color-surface-soft: var(--ds-surface-subtle);
   --color-accent: var(--ds-brand-main);
   --color-accent-strong: var(--ds-focus);
-  --color-accent-soft: var(--ds-brand-soft);
+  --color-accent-soft: var(--ds-brand-light);
   --color-ink: var(--ds-text-primary);
   --color-muted: var(--ds-text-tertiary);
   --color-subtle: var(--ds-text-muted);
@@ -48,7 +53,7 @@
   --radius-lg: var(--ds-radius-card);
   --focus-ring: var(--ds-focus-ring);
   color-scheme: light;
-  font-family: Gilroy, Inter, system-ui, sans-serif;
+  font-family: Gilroy, 'Inter Variable', Inter, system-ui, sans-serif;
   font-synthesis: none;
 }
 

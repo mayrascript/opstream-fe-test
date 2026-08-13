@@ -1,5 +1,10 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { QuestionSaveState } from '../../core/models/request.models';
+
+export interface SaveIndicatorState {
+  status: 'idle' | 'saving' | 'retrying' | 'saved' | 'error';
+  lastSavedAt?: Date;
+  error?: string;
+}
 
 @Component({
   selector: 'app-save-status-indicator',
@@ -9,6 +14,6 @@ import { QuestionSaveState } from '../../core/models/request.models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SaveStatusIndicator {
-  readonly state = input<QuestionSaveState>();
+  readonly state = input<SaveIndicatorState>();
   readonly retryRequested = output<void>();
 }

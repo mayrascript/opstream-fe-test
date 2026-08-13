@@ -12,7 +12,7 @@ permissions:
 jobs:
   quality:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -40,3 +40,22 @@ jobs:
 
       - name: End-to-end and accessibility tests
         run: npm run e2e
+
+      - name: Upload visual differences
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-differences
+          path: e2e/**/*-actual.png
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Upload browser diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-diagnostics
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

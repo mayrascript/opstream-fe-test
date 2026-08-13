@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AnswerControl, SchemaField } from '../../../../core/models/request.models';
+import { AnswerControl } from '../../../../core/forms/request-form.types';
+import { SchemaField } from '../../../../core/models/request.models';
 
 @Component({
   selector: 'app-text-field',

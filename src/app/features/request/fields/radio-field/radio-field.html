@@ -8,6 +8,8 @@
         [formControl]="control()"
         [required]="field().required ?? false"
         [attr.aria-invalid]="showError() ? 'true' : null"
+        [attr.aria-describedby]="showError() ? errorId() : null"
+        [attr.data-question-id]="field().id"
       />
       <span>{{ option }}</span>
     </label>

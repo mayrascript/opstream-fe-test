@@ -1,11 +1,6 @@
 import { FormControl, FormRecord, Validators } from '@angular/forms';
-import {
-  AnswerControl,
-  AnswerValue,
-  RequestFormGroup,
-  RequestSchema,
-  SectionFormGroup,
-} from '../models/request.models';
+import { AnswerValue, RequestSchema } from '../models/request.models';
+import { AnswerControl, RequestFormGroup, SectionFormGroup } from './request-form.types';
 
 export function buildRequestForm(schema: RequestSchema): RequestFormGroup {
   const form: RequestFormGroup = new FormRecord<SectionFormGroup>({});
@@ -15,7 +10,11 @@ export function buildRequestForm(schema: RequestSchema): RequestFormGroup {
 
     for (const field of section.fields) {
       const initialValue = field.default ?? null;
-      const validators = field.required ? [Validators.required] : [];
+      const validators = [
+        ...(field.required
+          ? [field.type === 'toggle' ? Validators.requiredTrue : Validators.required]
+          : []),
+      ];
       sectionGroup.addControl(
         String(field.id),
         new FormControl<AnswerValue>(initialValue, { validators }),

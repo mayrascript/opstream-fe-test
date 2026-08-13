@@ -28,6 +28,13 @@ describe('schema validator', () => {
     expect(() => validateSchemas(schemas)).toThrow('unsupported type');
   });
 
+  it('rejects unsupported presentation metadata', () => {
+    const schemas = schemaWith({ id: 1, label: 'Name', type: 'text' });
+    schemas[0].icon = 'unknown' as never;
+
+    expect(() => validateSchemas(schemas)).toThrow('unsupported icon');
+  });
+
   it('rejects duplicate question ids across schemas', () => {
     const schemas = [
       ...schemaWith({ id: 1, label: 'First', type: 'text' }),

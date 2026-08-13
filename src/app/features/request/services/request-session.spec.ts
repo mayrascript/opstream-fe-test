@@ -74,6 +74,76 @@ describe('RequestSessionService', () => {
     expect(api.saveAnswer.mock.calls[0][2]).toBe('Latest');
   });
 
+  it('cancels an in-flight save when a newer debounced value is ready', async () => {
+    const subscribers: { succeed: () => void }[] = [];
+    let cancellations = 0;
+    api.saveAnswer.mockImplementation(
+      () =>
+        new Observable<void>((subscriber) => {
+          subscribers.push({
+            succeed: () => {
+              subscriber.next();
+              subscriber.complete();
+            },
+          });
+          return () => {
+            cancellations += 1;
+          };
+        }),
+    );
+    service.start(REQUEST_SCHEMAS[0]);
+    const control = service.form()!.controls['requested-item'].controls['1758177604'];
+
+    control.setValue('First');
+    await vi.advanceTimersByTimeAsync(750);
+    expect(api.saveAnswer).toHaveBeenCalledTimes(1);
+
+    control.setValue('Latest');
+    await vi.advanceTimersByTimeAsync(750);
+    expect(api.saveAnswer).toHaveBeenCalledTimes(2);
+    expect(cancellations).toBe(1);
+
+    subscribers[1].succeed();
+    expect(service.getQuestionState(1758177604)?.status).toBe('saved');
+  });
+
+  it('keeps a newer debounced value pending when an older save completes', async () => {
+    const subscribers: { succeed: () => void }[] = [];
+    api.saveAnswer.mockImplementation(
+      () =>
+        new Observable<void>((subscriber) => {
+          subscribers.push({
+            succeed: () => {
+              subscriber.next();
+              subscriber.complete();
+            },
+          });
+        }),
+    );
+    service.start(REQUEST_SCHEMAS[0]);
+    const control = service.form()!.controls['requested-item'].controls['1758177604'];
+
+    control.setValue('First');
+    await vi.advanceTimersByTimeAsync(750);
+    control.setValue('Latest');
+    subscribers[0].succeed();
+
+    expect(service.getQuestionState(1758177604)?.status).toBe('saving');
+    const waiting = service.waitForSaves();
+    let settled = false;
+    void waiting.then(() => {
+      settled = true;
+    });
+    await Promise.resolve();
+    expect(settled).toBe(false);
+
+    await vi.advanceTimersByTimeAsync(750);
+    expect(api.saveAnswer).toHaveBeenCalledTimes(2);
+    subscribers[1].succeed();
+    TestBed.tick();
+    await expect(waiting).resolves.toBe(true);
+  });
+
   it('retries twice before reporting a final error', async () => {
     api.saveAnswer.mockImplementation(() => defer(() => throwError(() => new Error('offline'))));
     service.start(REQUEST_SCHEMAS[0]);
@@ -88,22 +158,69 @@ describe('RequestSessionService', () => {
     expect(await service.waitForSaves()).toBe(false);
   });
 
-  it('supports manual retry and creates the final snapshot', async () => {
+  it('allows only one manual retry after a final error and creates the final snapshot', async () => {
+    api.saveAnswer.mockImplementation(() => throwError(() => new Error('offline')));
     service.start(REQUEST_SCHEMAS[0]);
     const form = service.form()!;
     form.controls['requested-item'].controls['1758177604'].setValue('Suite');
+    await vi.advanceTimersByTimeAsync(2250);
+    expect(service.getQuestionState(1758177604)?.status).toBe('error');
+
+    api.saveAnswer.mockImplementation(() => of(undefined));
+    service.retryQuestion(1758177604);
+    service.retryQuestion(1758177604);
+    expect(service.getQuestionState(1758177604)?.status).toBe('saved');
+
     form.controls['requested-item'].controls['75484637462'].setValue(2);
     form.controls['vendor-info'].controls['4957463729'].setValue('Vendor');
     form.controls['vendor-info'].controls['8462736152'].setValue('USA');
     await vi.advanceTimersByTimeAsync(750);
 
-    service.retryQuestion(1758177604);
-    expect(api.saveAnswer).toHaveBeenCalled();
+    expect(api.saveAnswer).toHaveBeenCalledTimes(7);
     expect(await service.waitForSaves()).toBe(true);
 
     const summary = service.captureSummary();
     expect(summary?.answers['75484637462']).toBe(2);
     expect(summary?.schemaId).toBe('software-request');
+  });
+
+  it('cancels an active manual retry when the answer changes', async () => {
+    api.saveAnswer.mockImplementation(() => throwError(() => new Error('offline')));
+    service.start(REQUEST_SCHEMAS[0]);
+    const control = service.form()!.controls['requested-item'].controls['1758177604'];
+    control.setValue('First');
+    await vi.advanceTimersByTimeAsync(2250);
+    expect(service.getQuestionState(1758177604)?.status).toBe('error');
+
+    const retrySubscribers: { succeed: () => void }[] = [];
+    let manualRetryCancelled = false;
+    api.saveAnswer.mockImplementation(
+      () =>
+        new Observable<void>((subscriber) => {
+          retrySubscribers.push({
+            succeed: () => {
+              subscriber.next();
+              subscriber.complete();
+            },
+          });
+          return () => {
+            manualRetryCancelled = true;
+          };
+        }),
+    );
+    service.retryQuestion(1758177604);
+    expect(service.getQuestionState(1758177604)?.status).toBe('saving');
+
+    control.setValue('Latest');
+
+    expect(manualRetryCancelled).toBe(true);
+    expect(service.getQuestionState(1758177604)?.status).toBe('saving');
+    const waiting = service.waitForSaves();
+    await vi.advanceTimersByTimeAsync(750);
+    expect(api.saveAnswer.mock.lastCall?.[2]).toBe('Latest');
+    retrySubscribers[1].succeed();
+    TestBed.tick();
+    await expect(waiting).resolves.toBe(true);
   });
 
   it('ignores retry and summary requests without a session', () => {

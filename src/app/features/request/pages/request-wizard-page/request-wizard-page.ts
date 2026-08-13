@@ -1,7 +1,16 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  Injector,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SchemaSection, SectionFormGroup } from '../../../../core/models/request.models';
+import { SectionFormGroup } from '../../../../core/forms/request-form.types';
+import { SchemaSection } from '../../../../core/models/request.models';
 import { SectionForm } from '../../components/section-form/section-form';
 import { WizardProgress } from '../../components/wizard-progress/wizard-progress';
 import { RequestSessionService } from '../../services/request-session';
@@ -17,6 +26,7 @@ export class RequestWizardPage {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly injector = inject(Injector);
   protected readonly requestSession = inject(RequestSessionService);
 
   protected readonly activeIndex = signal(0);
@@ -75,7 +85,7 @@ export class RequestWizardPage {
   }
 
   protected async submit(): Promise<void> {
-    if (!this.validateSection()) {
+    if (!(await this.validateRequest())) {
       return;
     }
 
@@ -115,10 +125,50 @@ export class RequestWizardPage {
     this.validationAnnouncement.set(
       'Some required information is missing. Review the highlighted fields.',
     );
-    setTimeout(() => {
-      const firstInvalid = document.querySelector<HTMLElement>('[aria-invalid="true"]');
-      firstInvalid?.focus();
-    });
+    this.focusFirstInvalid();
     return false;
+  }
+
+  private async validateRequest(): Promise<boolean> {
+    const schema = this.requestSession.schema();
+    const form = this.requestSession.form();
+    if (!schema || !form || form.valid) {
+      return true;
+    }
+
+    form.markAllAsTouched();
+    const invalidIndex = schema.sections.findIndex((section) => form.controls[section.id]?.invalid);
+    if (invalidIndex >= 0 && invalidIndex !== this.activeIndex()) {
+      const invalidSection = schema.sections[invalidIndex];
+      await this.router.navigate(['/request', schema.id, invalidSection.id]);
+    }
+
+    this.attempted.set(true);
+    this.validationAnnouncement.set(
+      'Some required information is missing. Review the highlighted fields.',
+    );
+    this.focusFirstInvalid();
+    return false;
+  }
+
+  private focusFirstInvalid(): void {
+    const section = this.activeSection();
+    const group = this.activeGroup();
+    const firstInvalidId = section?.fields.find(
+      (field) => group?.controls[String(field.id)]?.invalid,
+    )?.id;
+    if (firstInvalidId === undefined) {
+      return;
+    }
+
+    afterNextRender(
+      () => {
+        const firstInvalid = document.querySelector<HTMLElement>(
+          `#question-${firstInvalidId}, [data-question-id="${firstInvalidId}"]`,
+        );
+        firstInvalid?.focus();
+      },
+      { injector: this.injector },
+    );
   }
 }

@@ -8,7 +8,6 @@ nav {
   border-radius: var(--ds-radius-control);
   color: var(--ds-text-secondary);
   inline-size: 100%;
-  padding-inline-end: 8px;
 }
 
 ol {
@@ -21,7 +20,7 @@ ol {
 
 li {
   align-items: center;
-  border-inline-end: 3px solid transparent;
+  border-inline-end: 2px solid transparent;
   border-radius: var(--ds-radius-control) 0 0 var(--ds-radius-control);
   display: flex;
   font-size: 0.875rem;
@@ -31,8 +30,8 @@ li {
 }
 
 li.is-active {
-  background: var(--ds-brand-soft);
-  border-inline-end-color: var(--ds-brand-main);
+  background: var(--ds-brand-nav);
+  border-inline-end-color: var(--ds-brand-strong);
   color: var(--ds-text-primary);
   font-weight: 600;
 }

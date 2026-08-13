@@ -14,6 +14,7 @@ The production URL will be added after the Cloudflare Pages project is connected
 - Signals for synchronous UI state
 - RxJS for debounced autosave, cancellation, and retry
 - SCSS and CSS custom properties
+- Bundled Inter variable fallback for deterministic typography
 - Vitest for unit and integration tests
 - Playwright and axe-core for end-to-end and WCAG checks
 
@@ -54,7 +55,9 @@ src/app
 
 Pages orchestrate routes. Feature components own request behavior. Field components render exactly one schema field type. Shared UI primitives have no request-domain knowledge. Services own schema loading, the in-memory session, and API-shaped asynchronous work.
 
-No component branches on Software or Hardware. Adding a valid schema, section, or supported question type is data-driven.
+No workflow or field behavior branches on Software or Hardware. Category icon metadata is presentational; adding a valid schema, section, or supported question type remains data-driven.
+
+The measured visual contract is documented in [Design system contract](docs/design-system.md), with its automated verification strategy in [Visual fidelity verification](docs/visual-fidelity.md).
 
 ## Autosave flow
 
@@ -79,9 +82,9 @@ The simulated API adds 600–1000 ms of latency and a 15% failure rate. Its timi
 - Errors after blur or a navigation attempt, never on initial render
 - Operable navigation buttons that mark fields, announce a summary, and focus the first error
 - Connected `aria-describedby`, `aria-invalid`, `aria-live`, and `aria-current` states
-- Visible keyboard focus, 40 px visual controls with 48 px mobile targets, reduced-motion support, and responsive fallback layouts
+- Visible keyboard focus, measured 32/40/48 px control variants, 48 px mobile targets, reduced-motion support, and responsive fallback layouts
 - Automated axe checks against WCAG 2.2 AA in desktop and mobile projects
-- Playwright visual baselines for the chooser, both wizard pages, Hardware toggle, and summary
+- Playwright visual baselines for the chooser, both wizard pages, Hardware toggle, summary, and the tablet breakpoint
 
 ## Quality commands
 
@@ -92,7 +95,7 @@ npm run build
 npm run e2e
 ```
 
-Coverage thresholds are enforced at 80% for statements, functions, and lines, and 75% for branches. Playwright runs at 1440×900 and 390×844; traces, screenshots, and videos are retained only on failure.
+Coverage thresholds are enforced at 80% for statements, functions, and lines, and 75% for branches. Playwright covers 1440×1080, 1024×900, and 390×844; traces, screenshots, and videos are retained only on failure.
 
 ## Routing and persistence
 
