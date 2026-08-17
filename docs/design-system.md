@@ -24,6 +24,7 @@ This document is the implementation contract for the request-form interface. It 
 | Accessible action   | `--ds-action-background`       | `#087965`              | Primary button surface                |
 | Action hover        | `--ds-action-background-hover` | `#066352`              | Primary button hover surface          |
 | Action text         | `--ds-action-text`             | `#FFFFFF`              | Primary button text                   |
+| Navigation text     | `--ds-navigation-text`         | `#087965`              | Accessible green page labels          |
 | Accessible error    | `--ds-error`                   | `#B42318`              | Validation and final save failures    |
 | Error surface       | `--ds-error-soft`              | `#FEF0ED`              | Invalid input surface                 |
 
@@ -31,9 +32,9 @@ The exact `States/Red` value is not exposed in read-only mode. The implemented e
 
 ### Typography
 
-The source family is Gilroy. The application bundles the two weights supplied under the Gilroy Free Font EULA as optimized WOFF2 assets: Light covers weights 100-500 and ExtraBold covers weights 600-900. The original OTF files are not distributed. Inter remains the complete fallback family for unsupported glyphs and deterministic visual testing.
+The source family is Gilroy. The application bundles the two weights supplied under the Gilroy Free Font EULA as optimized WOFF2 assets: Light covers weights 100-500 and ExtraBold covers weights 600-900. The original OTF files are not distributed. Inter remains the complete fallback family for unsupported glyphs.
 
-The stack is exposed through `--ds-font-family`. Browser screenshot tests override that token with bundled Inter and wait for the font before capture, keeping regression baselines independent from operating-system rasterization. The applicable third-party license is preserved in `docs/licenses/gilroy-free-font-eula.pdf`.
+The stack is exposed through `--ds-font-family`. Browser screenshot tests use the same bundled Gilroy faces as production and wait for both relevant weights before capture. The free package does not contain a distinct SemiBold file, so the requested CSS weight 600 resolves to the supplied ExtraBold face. The applicable third-party license is preserved in `docs/licenses/gilroy-free-font-eula.pdf`.
 
 | Style             |  Size |           Weight | Line height |
 | ----------------- | ----: | ---------------: | ----------: |
@@ -104,8 +105,10 @@ The stack is exposed through `--ds-font-family`. Browser screenshot tests overri
 
 ### Navigation
 
-- Desktop rail: `250px` wide, `4px` item gap, `40px` item height, and a `1px` right rule.
+- Desktop rail: `250 × 84px`, `4px` item gap, `40px` item height, `4px` radius, and a `1px` right rule.
+- Both page labels use Gilroy at `14px/600`, `150%` line height, zero tracking, and accessible green text. The inspected `Brand/Green37` value reaches only `2.79–2.96:1` on the two navigation surfaces at this text size, so it remains on the non-text active rule while the labels use `--ds-navigation-text`.
 - Current item: low-opacity green surface plus a `2px` `Brand/Green37` right rule.
+- Page items are native buttons. Selecting a later page validates the current section before routing; previous pages remain directly available.
 - Mobile navigation becomes a two-column horizontal strip above the form.
 
 ## Screen recipes
@@ -130,7 +133,7 @@ All desktop measurements use the source viewport of `1440 × 1080px`.
 - Question cards: `12px` vertical gap.
 - Actions: left aligned with a `12px` gap.
 
-The supplied compact reference is measured at `1040 × 682px`. At that viewport the composition is `840px` wide with a `196px` rail, `24px` gap, `548px` form track, and `80px` top offset. The heading uses a `21px` line box followed by `8px`; short question cards are approximately `96px` high with `16px` block padding, `19px` inline padding, `40px` inputs, and `10px` card gaps. Compact wizard actions are `24px` high. Between `1040px` and `1440px`, these values interpolate fluidly instead of jumping at a breakpoint.
+The full composition applies from `1025px` upward without interpolation. At the `1440px` source viewport, centering the `1060px` shell places the rail at `left: 190px`; that coordinate is an outcome of the centered layout and is not hardcoded for narrower desktops.
 
 The task frames contain demonstration questions. Production labels, field counts, and values come exclusively from the validated Software and Hardware schemas, so content height is intentionally data-driven.
 
@@ -146,8 +149,8 @@ The answer table renders every schema question. Its card may grow beyond the ref
 
 ## Responsive and accessibility contract
 
-- Between `769px` and `1439px`, the wizard interpolates from the compact reference (`196px` rail, `24px` gap, `548px` form, `80px` top offset) to the full desktop composition. The grid track can shrink below its preferred form width when required, avoiding horizontal overflow.
-- At `1440px` and above, the wizard uses the full `250px` rail, `32px` gap, `704px` form, and `158px` top offset.
+- From `1025px` upward, the wizard uses the full `250px` rail, `32px` gap, `704px` form, and `158px` top offset.
+- Between `769px` and `1024px`, the wizard uses a `200px` rail, `24px` gap, flexible form track, and `80px` top offset.
 - Below `768px`, navigation moves above the form and grid rows size to content; no viewport-height row stretching is allowed.
 - At `390px`, outer padding is `16px`, cards fill the available width, radio choices stack when necessary, and controls expose at least `48px` pointer targets.
 - Every coarse-pointer selector action, including the selected chip and recovery actions, exposes at least `48px` height at any viewport width.

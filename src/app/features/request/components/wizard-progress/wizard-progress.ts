@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { SchemaSection } from '../../../../core/models/request.models';
 
 @Component({
@@ -11,4 +11,5 @@ import { SchemaSection } from '../../../../core/models/request.models';
 export class WizardProgress {
   readonly sections = input.required<SchemaSection[]>();
   readonly activeIndex = input.required<number>();
+  readonly sectionSelected = output<string>();
 }

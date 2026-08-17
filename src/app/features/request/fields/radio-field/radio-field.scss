@@ -56,16 +56,6 @@ input:focus-visible[aria-invalid='true'] {
   }
 }
 
-@media (min-width: 48.0625rem) and (max-width: 89.9375rem) and (pointer: fine) {
-  .radio-option {
-    font-size: clamp(0.625rem, calc(1vw - 0.4px), 0.875rem);
-    gap: clamp(6px, calc(0.5vw + 0.8px), 8px);
-    min-block-size: clamp(24px, calc(2vw + 3.2px), 32px);
-    padding-block: 2px;
-    padding-inline: clamp(8px, calc(1vw - 2.4px), 12px);
-  }
-}
-
 @media (max-width: 34rem) {
   .radio-options {
     align-items: stretch;

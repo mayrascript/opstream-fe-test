@@ -119,6 +119,42 @@ describe('request routing flow', () => {
     expect(element.textContent).toContain('This field is required');
   });
 
+  it('validates clickable page navigation and renders schema radios on page two', async () => {
+    session.start(REQUEST_SCHEMAS[0]);
+    await harness.navigateByUrl('/request/software-request/requested-item', RequestWizardPage);
+    const element = harness.routeNativeElement! as HTMLElement;
+    const pageTwo = [...element.querySelectorAll<HTMLButtonElement>('nav button')].find((button) =>
+      button.textContent?.includes('Page 2'),
+    )!;
+
+    pageTwo.click();
+    await new Promise((resolve) => setTimeout(resolve));
+    await harness.fixture.whenStable();
+    expect(router.url).toBe('/request/software-request/requested-item');
+    expect(document.activeElement?.id).toBe('question-1758177604');
+
+    const requestedItem = session.form()!.controls['requested-item'];
+    requestedItem.controls['1758177604'].setValue('Design software');
+    requestedItem.controls['75484637462'].setValue(2);
+    pageTwo.click();
+    await harness.fixture.whenStable();
+
+    expect(router.url).toBe('/request/software-request/vendor-info');
+    expect(document.activeElement?.textContent).toContain('Vendor Information');
+    expect(
+      [...element.querySelectorAll<HTMLElement>('.radio-option span')].map((option) =>
+        option.textContent?.trim(),
+      ),
+    ).toEqual(['USA', 'UK', 'Other']);
+
+    const pageOne = [...element.querySelectorAll<HTMLButtonElement>('nav button')].find((button) =>
+      button.textContent?.includes('Page 1'),
+    )!;
+    pageOne.click();
+    await harness.fixture.whenStable();
+    expect(router.url).toBe('/request/software-request/requested-item');
+  });
+
   it('moves between sections while preserving answers', async () => {
     session.start(REQUEST_SCHEMAS[0]);
     await harness.navigateByUrl('/request/software-request/requested-item', RequestWizardPage);

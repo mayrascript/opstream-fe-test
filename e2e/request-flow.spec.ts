@@ -83,6 +83,33 @@ test('blocks invalid section navigation and focuses the first field', async ({ p
   await expect(page).toHaveURL(/requested-item$/);
 });
 
+test('uses the page rail with pointer and keyboard while enforcing forward validation', async ({
+  page,
+}) => {
+  await chooseRequest(page, 'Software Request');
+  const pageOne = page.getByRole('button', { name: /Page 1.*Requested Item/i });
+  const pageTwo = page.getByRole('button', { name: /Page 2.*Vendor Information/i });
+
+  await expect(pageOne).toHaveAttribute('aria-current', 'step');
+  await pageTwo.click();
+  await expect(page).toHaveURL(/requested-item$/);
+  await expect(page.locator('#question-1758177604')).toBeFocused();
+
+  await page.locator('#question-1758177604').fill('Design software');
+  await page.locator('#question-75484637462').fill('2');
+  await pageTwo.focus();
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/vendor-info$/);
+  await expect(page.getByRole('heading', { name: 'Vendor Information' })).toBeFocused();
+  await expect(page.getByRole('radio')).toHaveCount(3);
+  await expect(page.getByLabel('USA')).toBeVisible();
+
+  await pageOne.focus();
+  await page.keyboard.press('Space');
+  await expect(page).toHaveURL(/requested-item$/);
+  await expect(page.getByRole('heading', { name: 'Requested Item' })).toBeFocused();
+});
+
 test('accepts numeric zero when the schema declares no minimum', async ({ page }) => {
   await chooseRequest(page, 'Software Request');
   await page.locator('#question-1758177604').fill('Design software');

@@ -18,10 +18,3 @@
   justify-content: center;
   inline-size: 1rem;
 }
-
-@media (min-width: 48.0625rem) and (max-width: 89.9375rem) and (pointer: fine) {
-  .form-error {
-    font-size: clamp(0.625rem, calc(0.5vw + 4.8px), 0.75rem);
-    margin-block-start: clamp(6px, calc(0.5vw + 0.8px), 8px);
-  }
-}

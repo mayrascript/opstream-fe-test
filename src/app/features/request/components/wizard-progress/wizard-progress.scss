@@ -6,7 +6,6 @@
 nav {
   border-inline-end: 1px solid var(--ds-border);
   border-radius: var(--ds-radius-control);
-  color: var(--ds-text-secondary);
   inline-size: 100%;
 }
 
@@ -19,38 +18,42 @@ ol {
 }
 
 li {
+  min-inline-size: 0;
+}
+
+button {
   align-items: center;
+  background: transparent;
+  border: 0;
   border-inline-end: 2px solid transparent;
   border-radius: var(--ds-radius-control) 0 0 var(--ds-radius-control);
+  color: var(--ds-navigation-text);
+  cursor: pointer;
   display: flex;
+  font-family: var(--ds-font-family);
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
+  inline-size: 100%;
+  letter-spacing: 0;
+  line-height: 1.5;
   min-block-size: 40px;
   padding: 8px 12px;
+  text-align: start;
 }
 
-li.is-active {
+li.is-active button {
   background: var(--ds-brand-nav);
   border-inline-end-color: var(--ds-brand-strong);
-  color: var(--ds-text-primary);
-  font-weight: 600;
 }
 
-@media (min-width: 48.0625rem) and (max-width: 89.9375rem) {
-  li {
-    font-size: clamp(0.75rem, calc(0.5vw + 6.8px), 0.875rem);
-    min-block-size: clamp(32px, calc(2vw + 11.2px), 40px);
-    padding-block: clamp(4px, calc(1vw - 6.4px), 8px);
-    padding-inline: clamp(8px, calc(1vw - 2.4px), 12px);
-  }
-
-  li.is-active {
-    font-weight: 500;
+@media (hover: hover) {
+  li:not(.is-active) button:hover {
+    background: var(--ds-surface-subtle);
   }
 }
 
 @container (max-width: 30rem) {
-  li {
+  button {
     padding-inline: 10px;
   }
 }
@@ -68,7 +71,7 @@ li.is-active {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  li {
+  button {
     border-block-end: 3px solid transparent;
     border-inline-end: 0;
     border-radius: var(--ds-radius-control) var(--ds-radius-control) 0 0;
@@ -76,7 +79,13 @@ li.is-active {
     min-block-size: 40px;
   }
 
-  li.is-active {
+  li.is-active button {
     border-block-end-color: var(--ds-brand-main);
+  }
+}
+
+@media (pointer: coarse) {
+  button {
+    min-block-size: 48px;
   }
 }

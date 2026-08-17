@@ -1,13 +1,15 @@
 <nav aria-label="Request pages">
   <ol role="list">
     @for (section of sections(); track section.id; let index = $index) {
-      <li
-        [class.is-active]="index === activeIndex()"
-        [class.is-complete]="index < activeIndex()"
-        [attr.aria-current]="index === activeIndex() ? 'step' : null"
-      >
-        <span>Page {{ index + 1 }}</span>
-        <span class="visually-hidden">: {{ section.title }}</span>
+      <li [class.is-active]="index === activeIndex()" [class.is-complete]="index < activeIndex()">
+        <button
+          type="button"
+          [attr.aria-current]="index === activeIndex() ? 'step' : null"
+          (click)="sectionSelected.emit(section.id)"
+        >
+          <span>Page {{ index + 1 }}</span>
+          <span class="visually-hidden">: {{ section.title }}</span>
+        </button>
       </li>
     }
   </ol>

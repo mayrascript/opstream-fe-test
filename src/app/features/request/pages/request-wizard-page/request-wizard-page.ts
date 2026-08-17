@@ -77,6 +77,20 @@ export class RequestWizardPage {
     }
   }
 
+  protected selectSection(sectionId: string): void {
+    const schema = this.requestSession.schema();
+    const selectedIndex = schema?.sections.findIndex((section) => section.id === sectionId) ?? -1;
+    if (!schema || selectedIndex < 0 || selectedIndex === this.activeIndex()) {
+      return;
+    }
+
+    if (selectedIndex > this.activeIndex() && !this.validateSection()) {
+      return;
+    }
+
+    void this.router.navigate(['/request', schema.id, sectionId]);
+  }
+
   protected next(): void {
     if (!this.validateSection()) {
       return;

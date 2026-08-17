@@ -1,7 +1,11 @@
 @if (requestSession.schema(); as schema) {
   <div class="wizard-page">
     <aside class="progress-panel">
-      <app-wizard-progress [sections]="schema.sections" [activeIndex]="activeIndex()" />
+      <app-wizard-progress
+        [sections]="schema.sections"
+        [activeIndex]="activeIndex()"
+        (sectionSelected)="selectSection($event)"
+      />
     </aside>
 
     <section class="form-panel">

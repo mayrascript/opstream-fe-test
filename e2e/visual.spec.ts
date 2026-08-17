@@ -8,10 +8,13 @@ async function prepareVisualPage(page: Page): Promise<void> {
 }
 
 async function stabilizeVisualFont(page: Page): Promise<void> {
-  await page.addStyleTag({
-    content: `:root { --ds-font-family: 'Inter Variable', Inter, system-ui, sans-serif; }`,
+  await page.evaluate(async () => {
+    await Promise.all([
+      document.fonts.load('400 16px Gilroy'),
+      document.fonts.load('600 14px Gilroy'),
+    ]);
+    await document.fonts.ready;
   });
-  await page.evaluate(() => document.fonts.load('16px "Inter Variable"'));
 }
 
 async function chooseCategory(page: Page, category: 'Software' | 'Hardware'): Promise<void> {

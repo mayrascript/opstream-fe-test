@@ -24,6 +24,8 @@ async function computed(page: Page, selector: string) {
       fontFamily: style.fontFamily,
       fontSize: style.fontSize,
       fontWeight: style.fontWeight,
+      letterSpacing: style.letterSpacing,
+      lineHeight: style.lineHeight,
       outlineColor: style.outlineColor,
       outlineOffset: style.outlineOffset,
       outlineWidth: style.outlineWidth,
@@ -78,7 +80,7 @@ test('selector resolves the measured desktop design contract', async ({ page, vi
   expect(cardStyle.backgroundColor).toBe('rgb(255, 255, 255)');
   expect(cardStyle.borderRadius).toBe('25px');
   expect(cardStyle.padding).toBe('56px 72px');
-  expect((await computed(page, 'html')).fontFamily).toContain('Inter Variable');
+  expect((await computed(page, 'html')).fontFamily).toContain('Gilroy');
 });
 
 test('wizard resolves the measured desktop design contract', async ({ page, viewport }) => {
@@ -95,6 +97,7 @@ test('wizard resolves the measured desktop design contract', async ({ page, view
   expectNear(navigation.x, 190);
   expectNear(navigation.y, 158);
   expectNear(navigation.width, 250);
+  expectNear(navigation.height, 84);
   expectNear(panel.x, 472);
   expectNear(panel.y, 158);
   expectNear(panel.width, 704);
@@ -120,11 +123,27 @@ test('wizard resolves the measured desktop design contract', async ({ page, view
   expect(focusedInputStyle.outlineColor).toBe('rgb(8, 121, 101)');
   expect(focusedInputStyle.outlineWidth).toBe('3px');
   expect(focusedInputStyle.outlineOffset).toBe('3px');
+
+  const pageOneStyle = await computed(page, 'app-wizard-progress li:first-child button');
+  const pageTwoStyle = await computed(page, 'app-wizard-progress li:last-child button');
+  for (const style of [pageOneStyle, pageTwoStyle]) {
+    expect(style.color).toBe('rgb(8, 121, 101)');
+    expect(style.fontFamily).toContain('Gilroy');
+    expect(style.fontSize).toBe('14px');
+    expect(style.fontWeight).toBe('600');
+    expect(style.letterSpacing).toBe('normal');
+    expect(style.lineHeight).toBe('21px');
+  }
+
+  const labelStyle = await computed(
+    page,
+    '.fields app-dynamic-field:first-child .field-shell__label',
+  );
+  expect(labelStyle.fontSize).toBe('14px');
+  expect(labelStyle.fontWeight).toBe('600');
 });
 
-test('wizard matches the compact reference composition at 1040 pixels', async ({
-  page,
-}, testInfo) => {
+test('wizard keeps the full Figma composition at 1040 pixels', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop');
   await page.setViewportSize({ width: 1040, height: 682 });
   await chooseSoftware(page);
@@ -137,23 +156,24 @@ test('wizard matches the compact reference composition at 1040 pixels', async ({
   const input = await rect(page, '#question-1758177604');
   const action = await rect(page, '.form-actions app-button:last-child button');
 
-  expectNear(navigation.x, 100);
-  expectNear(navigation.y, 80);
-  expectNear(navigation.width, 196);
-  expectNear(panel.x, 320);
-  expectNear(panel.y, 80);
-  expectNear(panel.width, 548);
-  expectNear(heading.height, 21);
-  expectNear(firstCard.y, 109);
-  expectNear(firstCard.width, 548);
-  expectNear(firstCard.height, 96, 2);
-  expectNear(secondCard.y, 215, 2);
-  expectNear(input.x, 339);
-  expectNear(input.y, 149, 2);
-  expectNear(input.width, 510);
-  expectNear(input.height, 40);
-  expectNear(action.x, 320);
-  expectNear(action.height, 24);
+  expectNear(navigation.x, 16);
+  expectNear(navigation.y, 158);
+  expectNear(navigation.width, 250);
+  expectNear(navigation.height, 84);
+  expectNear(panel.x, 298);
+  expectNear(panel.y, 158);
+  expectNear(panel.width, 704);
+  expectNear(heading.height, 27);
+  expectNear(firstCard.y, 197);
+  expectNear(firstCard.width, 704);
+  expectNear(firstCard.height, 125, 2);
+  expectNear(secondCard.y, 334, 2);
+  expectNear(input.x, 322);
+  expectNear(input.y, 250, 2);
+  expectNear(input.width, 656);
+  expectNear(input.height, 48);
+  expectNear(action.x, 298);
+  expectNear(action.height, 32);
 });
 
 test('summary resolves the measured desktop design contract', async ({ page, viewport }) => {
@@ -204,7 +224,7 @@ test('mobile wizard rows size to content without the previous vertical void', as
   expectNear(panel.y - (navigation.y + navigation.height), 24, 2);
 });
 
-test('tablet wizard uses the compact rail and fluid form composition', async ({
+test('tablet wizard uses the responsive rail and flexible form composition', async ({
   page,
   viewport,
 }) => {
@@ -214,13 +234,13 @@ test('tablet wizard uses the compact rail and fluid form composition', async ({
   const navigation = await rect(page, 'app-wizard-progress nav');
   const panel = await rect(page, '.form-panel');
   expectNear(navigation.y, 80);
-  expectNear(navigation.width, 196);
+  expectNear(navigation.width, 200);
   expectNear(panel.x - (navigation.x + navigation.width), 24, 2);
-  expectNear(panel.width, 548);
+  expectNear(panel.width, 704);
   expect(panel.x + panel.width).toBeLessThanOrEqual(1008);
 });
 
-test('wizard scales continuously immediately above the tablet viewport', async ({
+test('wizard switches to the full Figma composition immediately above tablet', async ({
   page,
 }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop');
@@ -229,9 +249,11 @@ test('wizard scales continuously immediately above the tablet viewport', async (
 
   const navigation = await rect(page, 'app-wizard-progress nav');
   const panel = await rect(page, '.form-panel');
-  expectNear(navigation.width, 196, 1);
-  expectNear(panel.x - (navigation.x + navigation.width), 24, 1);
-  expectNear(panel.width, 548, 1);
+  expectNear(navigation.y, 158);
+  expectNear(navigation.width, 250);
+  expectNear(navigation.height, 84);
+  expectNear(panel.x - (navigation.x + navigation.width), 32);
+  expectNear(panel.width, 704);
 });
 
 test('coarse-pointer selector controls expose 48 pixel targets', async ({ page }, testInfo) => {

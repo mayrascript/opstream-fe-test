@@ -30,10 +30,3 @@ input[aria-invalid='true'] {
     block-size: 48px;
   }
 }
-
-@media (min-width: 48.0625rem) and (max-width: 89.9375rem) and (pointer: fine) {
-  input {
-    block-size: clamp(40px, calc(2vw + 19.2px), 48px);
-    padding-block: clamp(7px, calc(1vw - 3.4px), 11px);
-  }
-}
