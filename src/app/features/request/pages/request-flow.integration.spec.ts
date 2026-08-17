@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { Observable, of } from 'rxjs';
+import { NEVER, Observable, of, throwError } from 'rxjs';
 import { REQUEST_SCHEMAS } from '../../../core/data/request-schemas';
 import { RequestSchema } from '../../../core/models/request.models';
 import { MockRequestApi } from '../../../core/services/mock-request-api';
@@ -11,8 +11,10 @@ import { RequestWizardPage } from './request-wizard-page/request-wizard-page';
 import { SchemaChooserPage } from './schema-chooser-page/schema-chooser-page';
 
 class IntegrationApi {
+  schemasResponse: Observable<RequestSchema[]> = of(REQUEST_SCHEMAS);
+
   getSchemas(): Observable<RequestSchema[]> {
-    return of(REQUEST_SCHEMAS);
+    return this.schemasResponse;
   }
 
   saveAnswer(): Observable<void> {
@@ -22,6 +24,7 @@ class IntegrationApi {
 
 describe('request routing flow', () => {
   let harness: RouterTestingHarness;
+  let api: IntegrationApi;
   let session: RequestSessionService;
   let router: Router;
 
@@ -36,12 +39,36 @@ describe('request routing flow', () => {
         { provide: MockRequestApi, useClass: IntegrationApi },
       ],
     });
+    api = TestBed.inject(MockRequestApi) as unknown as IntegrationApi;
     session = TestBed.inject(RequestSessionService);
     router = TestBed.inject(Router);
     harness = await RouterTestingHarness.create();
   });
 
   afterEach(() => session.reset());
+
+  it('keeps the loading region free of broken heading references', async () => {
+    api.schemasResponse = NEVER;
+    await harness.navigateByUrl('/', SchemaChooserPage);
+    const loadingRegion = harness.routeNativeElement!.querySelector('.chooser-page')!;
+
+    expect(loadingRegion.getAttribute('aria-label')).toBe('Loading request types');
+    expect(loadingRegion.hasAttribute('aria-labelledby')).toBe(false);
+    expect(loadingRegion.querySelector('#chooser-title')).toBeNull();
+  });
+
+  it('keeps the error region free of broken heading references', async () => {
+    api.schemasResponse = throwError(() => new Error('Unavailable'));
+    await harness.navigateByUrl('/', SchemaChooserPage);
+    await harness.fixture.whenStable();
+    const errorRegion = harness.routeNativeElement!.querySelector('.chooser-page')!;
+
+    expect(errorRegion.getAttribute('aria-label')).toBe('Request types unavailable');
+    expect(errorRegion.hasAttribute('aria-labelledby')).toBe(false);
+    expect(errorRegion.querySelector('[role="alert"]')?.textContent).toContain(
+      'We could not load the request types.',
+    );
+  });
 
   it('selects one purchase category before starting the request', async () => {
     await harness.navigateByUrl('/', SchemaChooserPage);

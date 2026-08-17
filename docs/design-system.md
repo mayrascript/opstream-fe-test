@@ -28,9 +28,9 @@ The exact `States/Red` value is not exposed in read-only mode. The implemented e
 
 ### Typography
 
-The source family is Gilroy. It is not exportable from the supplied file, so the application requests `Gilroy` when the user has a licensed local copy and bundles Inter as the deterministic fallback.
+The source family is Gilroy. The application bundles the two weights supplied under the Gilroy Free Font EULA as optimized WOFF2 assets: Light covers weights 100-500 and ExtraBold covers weights 600-900. The original OTF files are not distributed. Inter remains the complete fallback family for unsupported glyphs and deterministic visual testing.
 
-The stack is exposed through `--ds-font-family`. Browser screenshot tests override that token with bundled Inter and wait for the font before capture, preventing a locally installed Gilroy copy from changing shared baselines.
+The stack is exposed through `--ds-font-family`. Browser screenshot tests override that token with bundled Inter and wait for the font before capture, keeping regression baselines independent from operating-system rasterization. The applicable third-party license is preserved in `docs/licenses/gilroy-free-font-eula.pdf`.
 
 | Style             |  Size |           Weight | Line height |
 | ----------------- | ----: | ---------------: | ----------: |

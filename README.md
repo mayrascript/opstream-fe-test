@@ -14,7 +14,7 @@ The production URL will be added after the Cloudflare Pages project is connected
 - Signals for synchronous UI state
 - RxJS for debounced autosave, cancellation, and retry
 - SCSS and CSS custom properties
-- Bundled Inter variable fallback for deterministic typography
+- Bundled Gilroy Light/ExtraBold with Inter Variable fallback
 - Vitest for unit and integration tests
 - Playwright and axe-core for end-to-end and WCAG checks
 

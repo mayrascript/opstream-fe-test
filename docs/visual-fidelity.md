@@ -35,7 +35,7 @@ The source task frames use placeholder questions and four summary rows. The prod
 
 The selector reference shows the Software selected state. The production selector intentionally starts with neither category selected so the required selection, focus transfer, and error-announcement path remains testable; the visual baseline selects Software before capture.
 
-The licensed Gilroy files and the source cupcake asset are not exportable. The application requests locally licensed Gilroy first, bundles Inter as a deterministic fallback, and renders the source cupcake character through the platform emoji font. These are the only asset-level limitations; layout and component geometry remain automated contracts.
+The source cupcake asset remains non-exportable, so the application renders the cupcake character through the platform emoji font. Gilroy is now bundled from the separately supplied free-font package in its available Light and ExtraBold weights; Inter remains the fallback and visual-test family. Intermediate Gilroy files such as Regular, Medium, and Bold were not included in that package, so the two licensed faces cover their documented weight ranges. This font-weight availability and the cupcake are the only asset-level limitations; layout and component geometry remain automated contracts.
 
 The source's white-on-brand action text and green-on-light active-navigation text measure below WCAG AA. The implementation keeps the measured brand surfaces and uses `Mono/Dark1` text instead. This accessibility adaptation is covered by axe and does not change component geometry.
 

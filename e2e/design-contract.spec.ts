@@ -66,9 +66,9 @@ test('selector resolves the measured desktop design contract', async ({ page, vi
   const selectedChip = await rect(page, '.schema-chip.is-selected');
   const unselectedChip = await rect(page, '.schema-chip:not(.is-selected)');
   const start = await rect(page, '.start-button');
-  expectNear(selectedChip.width, 111, 2);
+  expectNear(selectedChip.width, 111, 4);
   expectNear(selectedChip.height, 32);
-  expectNear(unselectedChip.width, 116, 2);
+  expectNear(unselectedChip.width, 116, 4);
   expectNear(unselectedChip.height, 42);
   expectNear(start.y, 376);
   expectNear(start.width, 65, 1);

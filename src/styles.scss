@@ -1,5 +1,21 @@
 @use '@fontsource-variable/inter';
 
+@font-face {
+  font-display: swap;
+  font-family: 'Gilroy';
+  font-style: normal;
+  font-weight: 100 500;
+  src: url('/fonts/gilroy/gilroy-light.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Gilroy';
+  font-style: normal;
+  font-weight: 600 900;
+  src: url('/fonts/gilroy/gilroy-extra-bold.woff2') format('woff2');
+}
+
 :root {
   --ds-canvas: #f6f6f7;
   --ds-surface: #ffffff;
