@@ -32,6 +32,25 @@ h1 {
   padding-block-start: 12px;
 }
 
+@media (min-width: 48.0625rem) and (max-width: 89.9375rem) {
+  .section-heading {
+    margin-block-end: clamp(8px, calc(1vw - 2.4px), 12px);
+  }
+
+  h1 {
+    font-size: clamp(0.875rem, calc(1vw + 3.6px), 1.125rem);
+    font-weight: 500;
+  }
+
+  .fields {
+    gap: clamp(10px, calc(0.5vw + 4.8px), 12px);
+  }
+
+  .form-actions {
+    padding-block-start: clamp(8px, calc(1vw - 2.4px), 12px);
+  }
+}
+
 @container (max-width: 30rem) {
   .form-actions {
     align-items: stretch;

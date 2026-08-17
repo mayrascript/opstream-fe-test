@@ -130,6 +130,8 @@ All desktop measurements use the source viewport of `1440 × 1080px`.
 - Question cards: `12px` vertical gap.
 - Actions: left aligned with a `12px` gap.
 
+The supplied compact reference is measured at `1040 × 682px`. At that viewport the composition is `840px` wide with a `196px` rail, `24px` gap, `548px` form track, and `80px` top offset. The heading uses a `21px` line box followed by `8px`; short question cards are approximately `96px` high with `16px` block padding, `19px` inline padding, `40px` inputs, and `10px` card gaps. Compact wizard actions are `24px` high. Between `1040px` and `1440px`, these values interpolate fluidly instead of jumping at a breakpoint.
+
 The task frames contain demonstration questions. Production labels, field counts, and values come exclusively from the validated Software and Hardware schemas, so content height is intentionally data-driven.
 
 ### Completion summary
@@ -144,8 +146,8 @@ The answer table renders every schema question. Its card may grow beyond the ref
 
 ## Responsive and accessibility contract
 
-- At `1024px` and below, the wizard rail reduces to `200px` and the form remains fluid.
-- At `1025px` and above, the wizard restores the `250px` rail and `32px` column gap when the composition fits.
+- Between `769px` and `1439px`, the wizard interpolates from the compact reference (`196px` rail, `24px` gap, `548px` form, `80px` top offset) to the full desktop composition. The grid track can shrink below its preferred form width when required, avoiding horizontal overflow.
+- At `1440px` and above, the wizard uses the full `250px` rail, `32px` gap, `704px` form, and `158px` top offset.
 - Below `768px`, navigation moves above the form and grid rows size to content; no viewport-height row stretching is allowed.
 - At `390px`, outer padding is `16px`, cards fill the available width, radio choices stack when necessary, and controls expose at least `48px` pointer targets.
 - Every coarse-pointer selector action, including the selected chip and recovery actions, exposes at least `48px` height at any viewport width.

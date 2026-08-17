@@ -8,10 +8,11 @@ The values in [design-system.md](./design-system.md) record the exposed source p
 
 ## 2. Structural browser assertions
 
-The desktop design-contract tests run at `1440 × 1080px` and assert the geometry and computed styles that define the composition:
+The design-contract tests cover the full desktop frame at `1440 × 1080px` and the supplied compact reference at `1040 × 682px`. They assert the geometry and computed styles that define the composition:
 
 - selector card position, size, padding, radius, and color;
 - wizard rail, column gap, form width, top offset, question padding, input height, and action alignment;
+- continuous scaling between the compact and full wizard compositions without a breakpoint jump;
 - completion card position, width, minimum height, padding, radius, and table geometry;
 - design tokens resolved by the browser rather than only declared in source.
 

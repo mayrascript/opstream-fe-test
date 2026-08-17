@@ -122,6 +122,40 @@ test('wizard resolves the measured desktop design contract', async ({ page, view
   expect(focusedInputStyle.outlineOffset).toBe('3px');
 });
 
+test('wizard matches the compact reference composition at 1040 pixels', async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop');
+  await page.setViewportSize({ width: 1040, height: 682 });
+  await chooseSoftware(page);
+
+  const navigation = await rect(page, 'app-wizard-progress nav');
+  const panel = await rect(page, '.form-panel');
+  const heading = await rect(page, '.section-heading h1');
+  const firstCard = await rect(page, '.fields app-dynamic-field:first-child .field-shell');
+  const secondCard = await rect(page, '.fields app-dynamic-field:nth-child(2) .field-shell');
+  const input = await rect(page, '#question-1758177604');
+  const action = await rect(page, '.form-actions app-button:last-child button');
+
+  expectNear(navigation.x, 100);
+  expectNear(navigation.y, 80);
+  expectNear(navigation.width, 196);
+  expectNear(panel.x, 320);
+  expectNear(panel.y, 80);
+  expectNear(panel.width, 548);
+  expectNear(heading.height, 21);
+  expectNear(firstCard.y, 109);
+  expectNear(firstCard.width, 548);
+  expectNear(firstCard.height, 96, 2);
+  expectNear(secondCard.y, 215, 2);
+  expectNear(input.x, 339);
+  expectNear(input.y, 149, 2);
+  expectNear(input.width, 510);
+  expectNear(input.height, 40);
+  expectNear(action.x, 320);
+  expectNear(action.height, 24);
+});
+
 test('summary resolves the measured desktop design contract', async ({ page, viewport }) => {
   test.skip(viewport?.width !== 1440);
   await chooseSoftware(page);
@@ -179,13 +213,14 @@ test('tablet wizard uses the compact rail and fluid form composition', async ({
 
   const navigation = await rect(page, 'app-wizard-progress nav');
   const panel = await rect(page, '.form-panel');
-  expectNear(navigation.width, 200);
+  expectNear(navigation.y, 80);
+  expectNear(navigation.width, 196);
   expectNear(panel.x - (navigation.x + navigation.width), 24, 2);
-  expect(panel.width).toBeGreaterThan(600);
+  expectNear(panel.width, 548);
   expect(panel.x + panel.width).toBeLessThanOrEqual(1008);
 });
 
-test('wizard restores the full rail immediately above the tablet breakpoint', async ({
+test('wizard scales continuously immediately above the tablet viewport', async ({
   page,
 }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop');
@@ -194,8 +229,9 @@ test('wizard restores the full rail immediately above the tablet breakpoint', as
 
   const navigation = await rect(page, 'app-wizard-progress nav');
   const panel = await rect(page, '.form-panel');
-  expectNear(navigation.width, 250);
-  expectNear(panel.x - (navigation.x + navigation.width), 32, 2);
+  expectNear(navigation.width, 196, 1);
+  expectNear(panel.x - (navigation.x + navigation.width), 24, 1);
+  expectNear(panel.width, 548, 1);
 });
 
 test('coarse-pointer selector controls expose 48 pixel targets', async ({ page }, testInfo) => {

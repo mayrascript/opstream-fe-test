@@ -36,6 +36,19 @@ li.is-active {
   font-weight: 600;
 }
 
+@media (min-width: 48.0625rem) and (max-width: 89.9375rem) {
+  li {
+    font-size: clamp(0.75rem, calc(0.5vw + 6.8px), 0.875rem);
+    min-block-size: clamp(32px, calc(2vw + 11.2px), 40px);
+    padding-block: clamp(4px, calc(1vw - 6.4px), 8px);
+    padding-inline: clamp(8px, calc(1vw - 2.4px), 12px);
+  }
+
+  li.is-active {
+    font-weight: 500;
+  }
+}
+
 @container (max-width: 30rem) {
   li {
     padding-inline: 10px;
