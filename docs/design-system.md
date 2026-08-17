@@ -6,23 +6,26 @@ This document is the implementation contract for the request-form interface. It 
 
 ### Color roles
 
-| Design role         | CSS token             | Value                  | Usage                                 |
-| ------------------- | --------------------- | ---------------------- | ------------------------------------- |
-| `States/bg`         | `--ds-canvas`         | `#F6F6F7`              | Full-viewport application canvas      |
-| `Mono/White`        | `--ds-surface`        | `#FFFFFF`              | Cards and controls                    |
-| `Mono/Dark1`        | `--ds-text-primary`   | `#26292D`              | Headings, labels, and primary content |
-| `Mono/Dark2`        | `--ds-text-secondary` | `#50545A`              | Supporting content                    |
-| `Mono/Dark3`        | `--ds-text-tertiary`  | `#747980`              | Secondary descriptions                |
-| `Mono/Gray2`        | `--ds-text-muted`     | `#95999F`              | Inactive metadata                     |
-| `Mono/Gray3`        | `--ds-border`         | `#E5E5E5`              | Chip, navigation, and button borders  |
-| Accessible boundary | `--ds-control-border` | `#747980`              | Editable controls and inactive switch |
-| `Mono/Gray4`        | `--ds-surface-subtle` | `#F8F8F8`              | Subtle hover surfaces                 |
-| `Brand/Main`        | `--ds-brand-main`     | `#1DB496`              | Primary actions and selected controls |
-| `Brand/Green37`     | `--ds-brand-strong`   | `#1AA287`              | Active navigation rule                |
-| `Brand/Light`       | `--ds-brand-light`    | `#F2FDFB`              | Selected chip surface                 |
-| Active navigation   | `--ds-brand-nav`      | `rgb(19 136 112 / 5%)` | Current page surface                  |
-| Accessible error    | `--ds-error`          | `#B42318`              | Validation and final save failures    |
-| Error surface       | `--ds-error-soft`     | `#FEF0ED`              | Invalid input surface                 |
+| Design role         | CSS token                      | Value                  | Usage                                 |
+| ------------------- | ------------------------------ | ---------------------- | ------------------------------------- |
+| `States/bg`         | `--ds-canvas`                  | `#F6F6F7`              | Full-viewport application canvas      |
+| `Mono/White`        | `--ds-surface`                 | `#FFFFFF`              | Cards and controls                    |
+| `Mono/Dark1`        | `--ds-text-primary`            | `#26292D`              | Headings, labels, and primary content |
+| `Mono/Dark2`        | `--ds-text-secondary`          | `#50545A`              | Supporting content                    |
+| `Mono/Dark3`        | `--ds-text-tertiary`           | `#747980`              | Secondary descriptions                |
+| `Mono/Gray2`        | `--ds-text-muted`              | `#95999F`              | Inactive metadata                     |
+| `Mono/Gray3`        | `--ds-border`                  | `#E5E5E5`              | Chip, navigation, and button borders  |
+| Accessible boundary | `--ds-control-border`          | `#747980`              | Editable controls and inactive switch |
+| `Mono/Gray4`        | `--ds-surface-subtle`          | `#F8F8F8`              | Subtle hover surfaces                 |
+| `Brand/Main`        | `--ds-brand-main`              | `#1DB496`              | Primary actions and selected controls |
+| `Brand/Green37`     | `--ds-brand-strong`            | `#1AA287`              | Active navigation rule                |
+| `Brand/Light`       | `--ds-brand-light`             | `#F2FDFB`              | Selected chip surface                 |
+| Active navigation   | `--ds-brand-nav`               | `rgb(19 136 112 / 5%)` | Current page surface                  |
+| Accessible action   | `--ds-action-background`       | `#087965`              | Primary button surface                |
+| Action hover        | `--ds-action-background-hover` | `#066352`              | Primary button hover surface          |
+| Action text         | `--ds-action-text`             | `#FFFFFF`              | Primary button text                   |
+| Accessible error    | `--ds-error`                   | `#B42318`              | Validation and final save failures    |
+| Error surface       | `--ds-error-soft`              | `#FEF0ED`              | Invalid input surface                 |
 
 The exact `States/Red` value is not exposed in read-only mode. The implemented error color is an explicit AA-contrast fallback and must not be replaced by an unverified approximation.
 
@@ -61,12 +64,12 @@ The stack is exposed through `--ds-font-family`. Browser screenshot tests overri
 
 ### Buttons
 
-- Primary: brand surface, primary dark text, `4px` radius, primary control shadow. The source's white treatment measures `2.61:1`; dark ink is the required WCAG AA adaptation.
+- Primary: accessible dark-green surface, white text, `4px` radius, primary control shadow. White measures `5.34:1` against the default surface and `7.21:1` against hover, meeting WCAG AA while preserving the source's green action treatment.
 - Secondary: white surface, `#E5E5E5` border, primary text.
 - Wizard actions: `32px` visual height, `12px` text, uppercase, `16px` inline padding.
 - Selector and completion actions: `40px` visual height, `14px` text, `16px` inline padding.
 - Coarse-pointer layouts expand the interactive height to at least `48px` without changing the desktop reference geometry.
-- Primary hover reuses `Brand/Green37`; feature components do not define an additional hover color.
+- Primary hover uses the shared accessible action-hover token; feature components do not define local button colors.
 
 ### Inputs
 

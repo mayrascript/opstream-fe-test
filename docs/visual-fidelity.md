@@ -37,7 +37,7 @@ The selector reference shows the Software selected state. The production selecto
 
 The source cupcake asset remains non-exportable, so the application renders the cupcake character through the platform emoji font. Gilroy is now bundled from the separately supplied free-font package in its available Light and ExtraBold weights; Inter remains the fallback and visual-test family. Intermediate Gilroy files such as Regular, Medium, and Bold were not included in that package, so the two licensed faces cover their documented weight ranges. This font-weight availability and the cupcake are the only asset-level limitations; layout and component geometry remain automated contracts.
 
-The source's white-on-brand action text and green-on-light active-navigation text measure below WCAG AA. The implementation keeps the measured brand surfaces and uses `Mono/Dark1` text instead. This accessibility adaptation is covered by axe and does not change component geometry.
+The source's white-on-`Brand/Main` action treatment measures below WCAG AA. Primary actions therefore use the darker shared action surface (`#087965`) with white text, which measures `5.34:1`; the hover surface measures `7.21:1`. Selected controls retain the measured `Brand/Main` value, and active navigation keeps dark text on its light surface. These adaptations are covered by axe and do not change component geometry.
 
 The source's `#E5E5E5` editable-control border measures `1.26:1` against its white surface. Inputs and the inactive switch therefore use `#747980` to make their boundary perceptible under WCAG 1.4.11; decorative borders retain the source neutral.
 

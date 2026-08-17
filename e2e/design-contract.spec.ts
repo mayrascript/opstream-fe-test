@@ -237,8 +237,13 @@ test('documented typography resolves on actions, save states, and summary answer
   const startStyle = await computed(page, '.start-button');
   expect(startStyle.fontSize).toBe('14px');
   expect(startStyle.fontWeight).toBe('700');
+  expect(startStyle.backgroundColor).toBe('rgb(8, 121, 101)');
+  expect(startStyle.color).toBe('rgb(255, 255, 255)');
 
   await chooseSoftware(page);
+  const nextStyle = await computed(page, '.form-actions app-button:last-child button');
+  expect(nextStyle.backgroundColor).toBe('rgb(8, 121, 101)');
+  expect(nextStyle.color).toBe('rgb(255, 255, 255)');
   await page.locator('#question-1758177604').fill('Design software');
   const saveStyle = await computed(page, '.save-state');
   expect(saveStyle.fontSize).toBe('12px');

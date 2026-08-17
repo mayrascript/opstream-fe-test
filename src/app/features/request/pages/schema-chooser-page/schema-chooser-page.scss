@@ -116,11 +116,11 @@ h1 {
 
 .start-button {
   align-items: center;
-  background: var(--ds-brand-main);
+  background: var(--ds-action-background);
   border: 0;
   border-radius: var(--ds-radius-control);
   box-shadow: var(--ds-control-shadow);
-  color: var(--ds-text-primary);
+  color: var(--ds-action-text);
   cursor: pointer;
   display: flex;
   font-size: 0.875rem;
@@ -132,7 +132,7 @@ h1 {
 }
 
 .start-button:hover {
-  background: var(--ds-brand-strong);
+  background: var(--ds-action-background-hover);
 }
 
 .state-card {

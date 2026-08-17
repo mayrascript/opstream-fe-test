@@ -39,13 +39,13 @@
 }
 
 .button--primary {
-  background: var(--ds-brand-main);
+  background: var(--ds-action-background);
   box-shadow: var(--ds-control-shadow);
-  color: var(--ds-text-primary);
+  color: var(--ds-action-text);
 }
 
 .button--primary:hover:not(:disabled) {
-  background: var(--ds-brand-strong);
+  background: var(--ds-action-background-hover);
 }
 
 .button--secondary {
